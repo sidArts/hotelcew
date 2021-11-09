@@ -1,0 +1,212 @@
+<?php
+
+use Restserver\Libraries\REST_Controller;
+
+defined('BASEPATH') or exit('No direct script access allowed');
+require APPPATH . 'libraries/REST_Controller.php';
+require APPPATH . 'libraries/Format.php';
+
+class Api extends REST_Controller {
+
+    private $result = [];
+    private $userId = "";
+    private $token  = "";
+    private $user   = "";
+    private $headers= [];
+    private $params = [];
+
+    /**
+     * @param Authorization : TOKEN | REQUIRED
+     */
+    function __construct() {
+        parent::__construct();
+        # Default response
+        $this->result = [
+            'status'    => FALSE, 
+            'message'   => "", 
+            'data'      => []
+        ];
+
+        # Request params
+        $this->params = $this->post();
+    }
+    
+    /**
+     *------------------------------------------------
+     * TEST METHOD
+     *------------------------------------------------
+     * @method GET
+     * @return json array()
+     */
+    public function test_get(){
+        $this->result['status']     = TRUE;
+        $this->result['message']    = "This is test function";
+        return $this->response($this->result, REST_Controller::HTTP_OK);
+    }
+
+    /**
+     * -------------------------------------
+     * PRODUCT CATEGORY LIST
+     * -------------------------------------
+     * @method POST
+     * @return json array()
+     */
+    public function category_list_post(){
+        $this->result['status'] = TRUE;
+
+    	$this->result['data']['categosies'] = $this->Common->find([
+    		'table' 	=> CATEGORIES, 
+    		'select' 	=> "id, title, image,downloadable",
+    		'where' 	=> "status = 'A'"
+    	]);
+
+        return $this->response($this->result, REST_Controller::HTTP_OK);
+    }
+
+    /*public function category_list_post()
+    {
+
+        $category=$this->db->select('id,title,image');
+                  $this->db->from('rr_categories');
+                  $this->db->where('status','A');
+                  $qry=$this->db->get();
+                  @$cat=$qry->result();
+        if(@$cat)
+        {
+            $this->response(@$cat, 200);
+        }
+ 
+        else
+        {
+            $this->response(NULL, 404);
+        }
+    }
+*/
+
+    /**
+     * -------------------------------------
+     * PRODUCT DEPENDING ON CATEGORY
+     * -------------------------------------
+     * @method POST
+     *
+     * @param category_id  	: (number) | REQUIRED
+     * @param page  		: (number) | NULLABLE
+     * @param rec_per_page  : (number) | NULLABLE
+     *
+     * @return json array()
+     */
+    public function categorywise_product_list_post(){
+        
+    	$this->form_validation->set_rules('category_id', 'Category ID', 'trim|required|numeric');
+    	$this->form_validation->set_rules('page', 'Page No', 'trim|numeric');
+    	$this->form_validation->set_rules('rec_per_page', 'Record per page', 'trim|numeric');
+    	
+    	# Check validation rule
+        if($this->form_validation->run() == FALSE) {
+            $this->result['message'] = strip_tags(str_replace("\n", '', validation_errors()));
+            $this->result['errors'] = $this->form_validation->error_array();
+
+            return $this->response($this->result, REST_Controller::HTTP_BAD_REQUEST);
+        }
+
+        #$category = $this->Common->findById(CATEGORIES, $this->params['category_id']);
+        $category = $this->Common->find([
+        	'table' 	=> CATEGORIES,
+        	'select' 	=> "id, title",
+        	'where' 	=> "id = {$this->params['category_id']} AND status = 'A'",
+        	'query' 	=> 'first'
+        ]);
+
+        # Check if category exist
+        if(empty($category)){
+        	$this->result['message'] = "Invalid category selected";
+			return $this->response($this->result, REST_Controller::HTTP_BAD_REQUEST);
+        }
+
+        # Product list
+        $products = $this->Common->find([
+        	'table' 	=> PRODUCT_CATEGORIES.' rpc',
+        	'select' 	=> "rpc.product_id, rpc.category_id, 
+        					rp.title, rp.pimg, rp.sort_desc, 
+        					rp.status, rp.id, rp.features, 
+        					rps.sku, rps.price, rps.sale_price, rps.qty",
+        	'join' 		=> [
+        						[PRODUCTS, 'rp', 'INNER', "rpc.product_id = rp.id"],
+        						[PRODUCT_SKUS, 'rps', 'INNER', "rps.product_id = rp.id"],
+        					],
+        	'where' 	=> "rpc.category_id = {$this->params['category_id']} AND rp.status = 'A'",
+        	'page' 		=> @$this->params['page'],
+        	'per_page' 	=> @$this->params['rec_per_page'],
+        ]);
+
+        # Total Product
+        $products_count = $this->Common->find([
+            'table'     => PRODUCT_CATEGORIES.' rpc',
+            'join'      => [
+                                [PRODUCTS, 'rp', 'INNER', "rpc.product_id = rp.id"],
+                                [PRODUCT_SKUS, 'rps', 'INNER', "rps.product_id = rp.id"],
+                            ],
+            'where'     => "rpc.category_id = {$this->params['category_id']} AND rp.status = 'A'",
+            'query'     => 'count'
+        ]);
+
+        $productList = [];
+        if(!empty($products)){
+            foreach($products AS $key => $eachProduct){
+                $productList[$key] = $eachProduct;
+                $productList[$key]['pimg'] = timthumb($productList[$key]['pimg'], 200, 200);
+            }
+        }
+
+        $this->result['status'] = TRUE;
+        $this->result['data'] 	= [
+        	'category' => $category,
+            'total'    => $products_count,
+        	'products' => $productList
+        ];
+        return $this->response($this->result, REST_Controller::HTTP_BAD_REQUEST);
+    }
+
+    /*public function categorywise_product_list_post()
+    {
+        $cat_id=@$this->post('category_id');
+       
+        $category_name=$this->db->select('id,title');
+                       $this->db->from('rr_categories');
+                       $this->db->where('id',$cat_id);
+                       $qry=$this->db->get();
+                       $cat_name=$qry->result();
+        @$pro_cat_name=@$cat_name[0]->title;
+
+
+        @$product_list=$this->db->select('rpc.product_id,rpc.category_id,rp.title,rp.pimg,rp.sort_desc,rp.status,rp.id,rp.features,rps.sku,rps.price,rps.sale_price,rps.qty,');
+                     $this->db->from('rr_product_categories rpc');
+                     $this->db->join('rr_products rp','rpc.product_id=rp.id');
+                     $this->db->join('rr_product_skus rps','rps.product_id=rp.id','inner');
+                     $this->db->where('rpc.category_id',$cat_id);
+                     $this->db->where('rp.status','A');
+                     @$qry=$this->db->get();
+                     @$pro_list=$qry->result();
+
+                     @$data['products_list']=@$pro_list;
+                     @$data['category_nam']=@$pro_cat_name;
+
+                     if(@$data)
+                    {
+                        $this->response(@$data, 200);
+
+                    }
+             
+                    else
+                    {
+                        $this->response(NULL, 404);
+                    }
+
+                    
+
+
+    }*/
+    
+}
+
+

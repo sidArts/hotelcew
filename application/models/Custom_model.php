@@ -1,0 +1,163 @@
+<?php
+
+class Custom_model extends CI_Model
+{
+  public function get_rooms($value='')
+  {
+    $query = $this->db->query("SELECT * FROM hotel WHERE status=1");
+    return $result = $query->result_array();
+  }
+
+  public function get_site_details($value='')
+  {
+    $query = $this->db->query("SELECT * FROM site_settings");
+    return $result = $query->result_array();
+    //var_dump($result);
+  }
+
+  public function room_details($slug='')
+  {
+  	return $room_details   = $this->Common->find([
+                'table' => 'hotel',
+                'select' =>'*',
+                'where' => "slug = '{$slug}'",
+                'query' => "first"
+            ]);
+  	
+  }
+
+  public function room_details_by_id($id='')
+  {
+  	return $room_details   = $this->Common->find([
+                'table' => 'hotel',
+                'select' =>'*',
+                'where' => "id = '{$id}'",
+                'query' => "first"
+            ]);
+  	
+  }
+
+  public function get_available_room($room_id='')
+  {
+  	$query = $this->db->query("SELECT hotel.no_of_room,SUM(st_bookings.no_of_room) AS booked_room FROM `hotel` INNER JOIN st_bookings ON st_bookings.room_id=hotel.id WHERE hotel.id='{$room_id}' AND st_bookings.status='A'");
+    $result = $query->result_array();
+
+    return $available_room = $result[0]['no_of_room'] - $result[0]['booked_room'];
+  }
+
+  public function get_booking_no($value='')
+  {
+  	$booking_no_max   = $this->Common->find([
+                'table' => 'st_bookings',
+                'select' =>'COUNT(id) AS counts',
+                'query' => "first"
+            ]);
+
+  	return 'AVI202100'.($booking_no_max['counts']+1);
+  }
+
+  public function update_by_table($table, $array, $id)
+  {
+    if ($id != "") {
+      $this->db->where('id', $id);
+      $this->db->update($table, $array);
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
+  public function update_rows($table, $array, $id)
+  {
+
+    if (!empty($id)) {
+      $this->db->where('id', $id);
+      $this->db->update($table, $array);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public function booking_details($id='')
+  {
+  	return $data_booking = $this->Common->find([
+            'table'     => 'st_bookings t1', 
+            'select'    => "t1.*,t2.name",
+            'join'      => [
+
+                                ['hotel', 't2', 'INNER', "t1.room_id = t2.id"],
+                            ],
+            'where'     => "t1.id = '{$id}'",
+            'query'=>'first',
+            ]);
+  }
+
+  public function get_page_content($slug='')
+  {
+    return $data_booking = $this->Common->find([
+            'table'     => 'pages', 
+            'select'    => "content",
+            'where'     => "slug = '{$slug}'",
+            'query'=>'first',
+            ]);
+  }
+
+  public function get_room_images($id='')
+  {
+    return $room_images = $this->Common->find([
+            'table'     => 'hotel_image', 
+            'select'    => "*",
+            'where'     => "hotel_id = '{$id}' AND status='A'",
+            ]);
+  }
+
+  public function checkexsitingemail($email)
+  {
+
+    $this->db->select('email');
+    $this->db->from('st_stores');
+    $this->db->where('role', 2);
+    $this->db->where('email', $email);
+    $query = $this->db->get();
+    return $query->row_array();
+  }
+  public function checkexsiting_user_mail($email)
+  {
+
+    $this->db->select('email');
+    $this->db->from('st_users');
+    $this->db->where('role', 2);
+    $this->db->where('email', $email);
+    $query = $this->db->get();
+    return $query->row_array();
+  }
+
+  public function send_aviana_email($to='',$subject='',$body='')
+  {
+    ob_start();
+            ?>
+            <div style="max-width: 750px; margin: 0 auto; background-color: #f5f5f5; border: #ddd solid 1px; color: #000;">
+                <div style="background-color: #000; text-align: center; padding: 30px;">
+                    
+                        <img style="height: 100px;" src="http://hotelaviana.com/public/uploads/logo.png" style="width: 200px;">
+                        
+                </div>
+                <div style="background-color: #fff; border: #000 solid 1px; padding: 30px;">
+                    <?php echo $body;?>
+
+                    
+                   
+                    <div style="padding-bottom: 15px;">Questions? If you have any questions, head over to our online chat support, or email us at <a href="mailto:support@hotelaviana.com">support@hotelaviana.com</a></div>
+                    
+                    
+                </div>
+
+                <div style="background-color: #000; color: #fff; text-align: center; padding: 15px; font-size: 13px;">Copyright © 2021 Aviani Infra Projects PVT Ltd. All rights reserved.</div>
+            </div>
+            <?php 
+            $body = ob_get_clean();
+            $emailSent = email(DOMAIN_MAIL, $to, $subject, $body);
+  }
+  
+}

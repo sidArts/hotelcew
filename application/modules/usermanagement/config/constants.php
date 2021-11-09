@@ -1,0 +1,20 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
+
+defined('PRODUCTS')        			OR define('PRODUCTS', 					DB_PREFIX."products");
+defined('PRODUCT_ATTRIBUTES')       OR define('PRODUCT_ATTRIBUTES', 		DB_PREFIX."product_attributes");
+defined('CATEGORIES')        		OR define('CATEGORIES', 				DB_PREFIX."CATEGORIES");
+defined('PRODUCT_CATEGORIES')       OR define('PRODUCT_CATEGORIES', 		DB_PREFIX."PRODUCT_CATEGORIES");
+defined('PRODUCT_IMAGES')        	OR define('PRODUCT_IMAGES', 			DB_PREFIX."PRODUCT_IMAGES");
+defined('PRODUCT_SKUS')        		OR define('PRODUCT_SKUS', 				DB_PREFIX."PRODUCT_SKUS");
+defined('PRODUCT_SKU_VALUES')       OR define('PRODUCT_SKU_VALUES', 		DB_PREFIX."PRODUCT_SKU_VALUES");
+defined('VARIANTS')        			OR define('VARIANTS', 					DB_PREFIX."variants");
+defined('RECENTLY_VIEWED_PRODUCTS') OR define('RECENTLY_VIEWED_PRODUCTS', 	DB_PREFIX."RECENTLY_VIEWED_PRODUCTS");
+defined('RELATED_PRODUCTS')        	OR define('RELATED_PRODUCTS', 			DB_PREFIX."RELATED_PRODUCTS");
+defined('BULK_PRODUCT_PRICES')      OR define('BULK_PRODUCT_PRICES', 		DB_PREFIX."BULK_PRODUCT_PRICES");
+defined('CART_ITEMS')        		OR define('CART_ITEMS', 				DB_PREFIX."CART_ITEMS");
+defined('COUPONS')        			OR define('COUPONS', 					DB_PREFIX."COUPONS");
+defined('COUPON_PRODUCTS')        	OR define('COUPON_PRODUCTS', 			DB_PREFIX."COUPON_PRODUCTS");
+defined('COUPON_USERS')        		OR define('COUPON_USERS', 				DB_PREFIX."COUPON_USERS");
+defined('COUPON_USE_LOGS')        	OR define('COUPON_USE_LOGS', 			DB_PREFIX."COUPON_USE_LOGS");
+defined('INDUSTRIES')        		OR define('INDUSTRIES', 				DB_PREFIX."INDUSTRIES");
+defined('PRODUCT_INDUSTRIES')       OR define('PRODUCT_INDUSTRIES', 		DB_PREFIX."PRODUCT_INDUSTRIES");

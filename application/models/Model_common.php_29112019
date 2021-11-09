@@ -1,0 +1,63 @@
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+class Model_common extends MY_Model {
+	
+	function __construct()
+    {
+        // Call the Model constructor
+        parent::__construct();
+    }
+	
+    function find($table = '', $fields='', $join = array(), $extra = '', $order = '', $group = '', $limit = '')	{
+		return parent::find_record($table, $fields, $join, $extra, $order, $group, $limit);
+	}
+	
+	function findById($table = '', $id)	{
+		return parent::findById_record($table, $id);
+	}
+	
+	function findBy($table = '', $field, $value, $order = '')	{
+		return parent::findBy_record($table, $field, $value, $order);
+	}
+	function change_status($table = '', $id, $custom = [])	{
+		return parent::change_status_record($table, $id, $custom);
+	}
+	// Soft delete
+	function delete($table = '', $id, $custom = [])	{
+		return parent::delete_record($table, $id, $custom);
+	}
+	// Soft delete
+	function deleteAll($table = '', $condition = '')	{
+		return parent::deleteAll_record($table, $condition);
+	}
+	// Permanent delete
+	function drop($table = '', $id)	{
+		return parent::drop_record($table, $id);
+	}
+	// Permanent delete
+	function dropAll($table = '', $condition = '')	{
+		return parent::dropAll_record($table, $condition);
+	}
+
+	function count($table = '', $condition = '', $join = [])	{
+		return parent::count_record($table, $condition, $join);
+	}
+	
+	function save($table = '', $fildArray = [], $condition = "")	{
+		return parent::save_record($table, $fildArray, $condition);
+	}
+	
+	function primaryKey($table = '', $all = 0)	{
+		$res = $this->db->query("SHOW KEYS FROM `".$table."` WHERE Key_name = 'PRIMARY'");
+		if($all){
+			$result = $res->result_array();
+		}else{
+			$resu = $res->row_array();
+			$result = @$resu['Column_name'];
+		}
+		return $result;
+	}
+
+
+
+}

@@ -1,0 +1,299 @@
+<?php (defined('BASEPATH')) OR exit('No direct script access allowed');
+
+class MY_Model extends CI_Model {
+
+    public function __construct() {
+        parent::__construct();
+    }
+
+	/*-======================= CUSTOM FUNCTIONS ===========================*/
+
+	function save_record($tbl, $dataArray=array(), $condition = "")
+    {
+		//echo "<pre>"; print_r($dataArray); echo "</pre>"; exit;
+		
+		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Add Created / Modified column ~~~~~~~~~~~~~~~~~~
+		if(isset($dataArray['id']))	{
+			if($dataArray['id'] != '')	{
+				$dataArray['modified'] = date("Y-m-d H:i:s");
+			}else	{
+				$dataArray['created'] = date("Y-m-d H:i:s");
+				$dataArray['modified'] = "0000-00-00 00:00:00";
+			}
+		}
+        else	{
+			$dataArray['created'] = date("Y-m-d H:i:s");
+			$dataArray['modified'] = "0000-00-00 00:00:00";
+		}
+		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Add Created / Modified column ~~~~~~~~~~~~~~~~~~
+
+		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ delete unnessery column ~~~~~~~~~~~~~~~~~~
+		$colArray 	= $this->db->query("DESC `".$tbl.'`'); 
+		$cols 		= array();
+		
+		foreach($colArray->result() as $col)	{
+			array_push($cols, $col->Field);
+		}
+		
+		foreach($dataArray as $key => $val)	{
+			if(!in_array($key, $cols))	{
+				unset($dataArray[$key]);
+			}
+		}
+
+
+		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ delete unnessery column ~~~~~~~~~~~~~~~~~~
+		
+		if(isset($dataArray['id']))	{
+			/* ===== IF UPDATE BY PRIMARY KEY ======*/
+			if($dataArray['id'] != '')	{
+				if($this->findById_record($tbl, $dataArray['id'])){
+					if($this->columns($tbl, 'status')){
+						$this->db->where('id',$dataArray['id']);
+					}else{
+						$this->db->where($this->primaryKey($tbl), $dataArray['id']);
+					}
+					$this->db->update($tbl, $dataArray);
+					return $dataArray['id'];
+				}else{
+					return FALSE;
+				}
+			}
+			else{
+				$this->db->insert($tbl, $dataArray);
+				return $this->db->insert_id();
+			}
+		} else if($condition != ""){
+			/* ===== IF UPDATE ON CUSTOM CONDITIONS ======*/
+			$this->db->where($condition);
+			$this->db->update($tbl, $dataArray);
+		} else	{
+            $this->db->insert($tbl, $dataArray);
+            return $this->db->insert_id();
+		}
+        //echo $this->db->last_query(); exit(0);
+    }
+	
+	function find_record($tbl, $fields, $join =array(), $extra='', $order = '', $group = '', $limit = '')
+    {
+		$this->db->select($fields);											// Select column
+        $this->db->from($tbl);												// From Table
+        
+		if(!empty($join))
+			foreach($join as $eachVal)	{
+				$this->db->join($eachVal['table'].' '.$eachVal['alias'], $eachVal['conditions'], $eachVal['type']);
+			}
+		$tableName = explode(' ', $tbl);
+
+		$tblForAl = (@$tableName[1] != "") ? $tableName[1] : $tableName[0];
+		if($this->columns($tableName[0], 'status')){
+			// No deleted record should be display
+			$this->db->where($tblForAl.".status != 'D'");
+		}									
+        if($extra != '') $this->db->where($extra, "", false);							// Where conditions
+		if($order != '') $this->db->order_by($order);						// Order by
+		if($group != '') $this->db->group_by($group);						// Group by
+		
+		if($limit)	{														// Limit
+			$limitOfset = explode(',', $limit); 
+			if(count($limitOfset) == 2)
+				$this->db->limit($limitOfset[1],$limitOfset[0]);
+			else
+				$this->db->limit($limit);
+		}
+        
+        $query = $this->db->get();
+        
+        //echo $this->db->last_query(); //exit(0);
+        
+		//echo "<pre>"; print_r($query->result_array()); echo "</pre>"; //exit;
+		
+        if($query->num_rows() > 0)
+            return $query->result_array();
+        else
+            return [];
+    }
+	
+	function find_all_record($tbl, $fields, $join =array(), $extra='', $order = '', $group = '', $limit = '')
+    {
+		$this->db->select($fields);											// Select column
+        $this->db->from($tbl);												// From Table
+        
+		if(!empty($join))
+			foreach($join as $eachVal)	{
+				$this->db->join($eachVal['table'].' '.$eachVal['alias'], $eachVal['conditions'], $eachVal['type']);
+			}
+		$tableName = explode(' ', $tbl);
+			
+        if($extra != '') $this->db->where($extra);							// Where conditions
+		if($order != '') $this->db->order_by($order);						// Order by
+		if($group != '') $this->db->group_by($group);						// Group by
+		
+		if($limit)	{														// Limit
+			$limitOfset = explode(',', $limit); 
+			if(count($limitOfset) == 2)
+				$this->db->limit($limitOfset[1],$limitOfset[0]);
+			else
+				$this->db->limit($limit);
+		}
+        
+        $query = $this->db->get();
+        
+        //echo $this->db->last_query(); //exit(0);
+        
+		//echo "<pre>"; print_r($query->result_array()); echo "</pre>"; //exit;
+		
+        if($query->num_rows() > 0)
+            return $query->result_array();
+        else
+            return [];
+    }
+	
+	function findById_record($tbl, $id)	{
+		if($this->columns($tbl, 'id')){
+			$this->db->where('id', $id);
+		}else{
+			$pk = $this->primaryKey($tbl);
+			$this->db->where($pk, $id);
+		}
+		$query = $this->db->get($tbl);
+		//echo $this->db->last_query();
+		
+		if($query->num_rows() > 0)
+			return $query->row_array();
+		else
+			return [];
+	}
+	
+	function findBy_record($tbl, $field, $value, $order = '')	{
+		
+		$this->db->where($field, $value);
+		if($order != '') $this->db->order_by($order);				// optional order
+		$query = $this->db->get($tbl);
+		//echo $this->db->last_query();
+		
+		if($query->num_rows() > 0)
+			return $query->row_array();
+		else
+			return [];
+	}
+	
+	function count_record($tbl, $condition = '', $join = [])	{
+		if($this->columns($tbl, 'status')){
+			$this->db->where("status != 'D'");
+		}
+
+		if(!empty($join)){
+			foreach($join as $eachVal)	{
+				$this->db->join($eachVal['table'].' '.$eachVal['alias'], $eachVal['conditions'], $eachVal['type']);
+			}
+		}
+		
+		if($condition) $this->db->where($condition);
+		$query = $this->db->get($tbl);
+		return $query->num_rows();
+	}
+	
+	function change_status_record($tbl, $id, $custom = [])	{
+		$current_status = 'I';
+		if(empty($custom)){
+			$record = $this->findById_record($tbl, $id);
+			$current_status = ($record['status'] == 'I') ? 'A' : 'I';
+		}
+		if($this->columns($tbl, 'id')){
+			$status = $this->db->where('id', $id);
+		}else{
+			$status = $this->db->where($this->primaryKey($tbl), $id);
+		}
+
+		if(!empty(@$custom)){
+			return $status = $status->update($tbl, $custom);
+		}
+		else if($this->columns($tbl, 'status')){
+			return $status->update($tbl, ['status' => $current_status]);
+		} else{
+			return NULL;
+		}
+		//return $query = $this->db->delete($tbl);
+	}
+	
+	function delete_record($tbl, $id, $custom = [])	{
+		if($this->columns($tbl, 'id')){
+			$this->db->where('id', $id);
+		}else{
+			$this->db->where($this->primaryKey($tbl), $id);
+		}
+
+		if($this->columns($tbl, 'status')){
+			return $this->db->update($tbl, ['status' => 'D']);
+		}else if(!empty(@$custom)){
+			return $this->db->update($tbl, $custom);
+		}else{
+			return NULL;
+		}
+		//return $query = $this->db->delete($tbl);
+	}
+	
+	function drop_record($tbl,$id)	{
+		if($this->columns($tbl, 'id')){
+			$this->db->where('id', $id);
+		}else{
+			$this->db->where($this->primaryKey($tbl), $id);
+		}
+		return $query = $this->db->delete($tbl);
+	}
+	
+	function dropAll_record($tbl,$condition = '')	{
+		
+		if($condition)	{
+			$this->db->where($condition);
+			return $query = $this->db->delete($tbl);
+		}
+		else return NULL;
+	}
+	
+	function deleteAll_record($tbl,$condition = '')	{
+		if($this->columns($tbl, 'status')){
+			if($condition)	{
+				$this->db->where($condition);
+				return $this->db->update($tbl, ['status' => 'D']);
+			}
+		}else{
+			return NULL;
+		}
+	}
+	
+	function columns($tbl = NULL, $column = NULL)	{
+		if($tbl){
+			$cond = ($column) ? " AND `COLUMN_NAME` = '{$column}'" : "";
+			$colArray   = $this->db->query("SELECT `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`='".$this->db->database."' AND `TABLE_NAME`='{$tbl}'".$cond); 
+	        if($column){
+	        	return $colArray->num_rows();
+	        }else{
+	        	$cols = [];
+	        	$res = $colArray->result_array();
+	        	if(!empty($res)){
+	        		foreach($res AS $eachCol){
+	        			$cols = $eachCol['COLUMN_NAME'];
+	        		}
+	        	}
+	        	return $cols;	
+	        }
+	    }else{
+	    	return NULL;
+	    }
+	}
+	
+	function primaryKey($table = '', $all = 0)	{
+		$tableArr = explode(' ', $table);
+		$table = @$tableArr[0];
+		$res = $this->db->query("SHOW KEYS FROM `".$table."` WHERE Key_name = 'PRIMARY'");
+		if($all){
+			$result = $res->result_array();
+		}else{
+			$resu = $res->row_array();
+			$result = @$resu['Column_name'];
+		}
+		return $result;
+	}
+}
