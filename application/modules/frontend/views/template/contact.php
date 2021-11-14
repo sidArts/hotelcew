@@ -114,7 +114,7 @@
 
 							<div class="col-12">
 							<button type="submit" class="wpcf7-form-control wpcf7-submit">Send</button>
-							<span class="es_spinner_image" id="spinner-image" style="display: none;"><img src="http://dev6.ivantechnology.in/mountdesertholding/wp-content/plugins/email-subscribers/lite/public/images/spinner.gif"></span>
+							<span class="es_spinner_image" id="spinner-image" style="display: none;"><img src="https://dev6.ivantechnology.in/mountdesertholding/wp-content/plugins/email-subscribers/lite/public/images/spinner.gif"></span>
 
 							</div>
 
@@ -152,7 +152,7 @@
 
 						<ul class="social d-flex">
 
-							<li><a href="http://www.facebook.com/" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+							<li><a href="https://www.facebook.com/" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
 
 							<li><a href="https://twitter.com/" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
 

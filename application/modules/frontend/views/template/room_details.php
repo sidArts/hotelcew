@@ -1,6 +1,6 @@
-<link rel="stylesheet" id="woocommerce-general-css" href="http://dev6.ivantechnology.in/mountdesertholding/wp-content/plugins/woocommerce/assets/css/woocommerce.css?ver=3.8.1" media="all">
+<link rel="stylesheet" id="woocommerce-general-css" href="https://dev6.ivantechnology.in/mountdesertholding/wp-content/plugins/woocommerce/assets/css/woocommerce.css?ver=3.8.1" media="all">
 
-<link rel="stylesheet" id="woocommerce-layout-css" href="http://dev6.ivantechnology.in/mountdesertholding/wp-content/plugins/woocommerce/assets/css/woocommerce-layout.css?ver=3.8.1" media="all">
+<link rel="stylesheet" id="woocommerce-layout-css" href="https://dev6.ivantechnology.in/mountdesertholding/wp-content/plugins/woocommerce/assets/css/woocommerce-layout.css?ver=3.8.1" media="all">
 
 <link rel="stylesheet" href="<?= base_url()?>public/slider/css/swiper.min.css" />
 <link rel="stylesheet" href="<?= base_url()?>public/slider/css/easyzoom.css" />
@@ -166,7 +166,7 @@
 
 	
 
-	<span class="posted_in">Category: <a href="http://dev6.ivantechnology.in/mountdesertholding/product-category/uncategorized/" rel="tag">Uncategorized</a></span>
+	<span class="posted_in">Category: <a href="https://dev6.ivantechnology.in/mountdesertholding/product-category/uncategorized/" rel="tag">Uncategorized</a></span>
 
 	
 
@@ -260,7 +260,7 @@
 
 		  <button type="submit" class="btn btn-warning">Submit</button>
 
-		  <img src="http://dev5.ivantechnology.in/fijihistory/wp-content/themes/myfiji/images/orange_circles.gif" id="loader-img" style="width: 84px;display: none">
+		  <img src="https://dev5.ivantechnology.in/fijihistory/wp-content/themes/myfiji/images/orange_circles.gif" id="loader-img" style="width: 84px;display: none">
 
 		  <p style="color: red;display: none" id="error-alert">Something error</p>
 
@@ -316,7 +316,7 @@
 
 
 
-		<img alt="" src="http://0.gravatar.com/avatar/9eb504ac75489cd7963b8577287aa061?s=60&amp;d=mm&amp;r=g" srcset="http://0.gravatar.com/avatar/9eb504ac75489cd7963b8577287aa061?s=120&amp;d=mm&amp;r=g 2x" class="avatar avatar-60 photo" height="60" width="60">
+		<img alt="" src="https://0.gravatar.com/avatar/9eb504ac75489cd7963b8577287aa061?s=60&amp;d=mm&amp;r=g" srcset="https://0.gravatar.com/avatar/9eb504ac75489cd7963b8577287aa061?s=120&amp;d=mm&amp;r=g 2x" class="avatar avatar-60 photo" height="60" width="60">
 
 		<div class="comment-text">
 
@@ -358,7 +358,7 @@
 
 					<div id="respond" class="comment-respond">
 
-		<span id="reply-title" class="comment-reply-title">Add a review <small><a rel="nofollow" id="cancel-comment-reply-link" href="/mountdesertholding/product/special-room/#respond" style="display:none;">Cancel reply</a></small></span><form action="http://dev6.ivantechnology.in/mountdesertholding/wp-comments-post.php" method="post" id="commentform" class="comment-form" novalidate=""><p class="comment-notes"><span id="email-notes">Your email address will not be published.</span> Required fields are marked <span class="required">*</span></p><div class="comment-form-rating"><label for="rating">Your rating</label><p class="stars">						<span>							<a class="star-1" href="#">1</a>							<a class="star-2" href="#">2</a>							<a class="star-3" href="#">3</a>							<a class="star-4" href="#">4</a>							<a class="star-5" href="#">5</a>						</span>					</p><select name="rating" id="rating" required="" style="display: none;">
+		<span id="reply-title" class="comment-reply-title">Add a review <small><a rel="nofollow" id="cancel-comment-reply-link" href="/mountdesertholding/product/special-room/#respond" style="display:none;">Cancel reply</a></small></span><form action="https://dev6.ivantechnology.in/mountdesertholding/wp-comments-post.php" method="post" id="commentform" class="comment-form" novalidate=""><p class="comment-notes"><span id="email-notes">Your email address will not be published.</span> Required fields are marked <span class="required">*</span></p><div class="comment-form-rating"><label for="rating">Your rating</label><p class="stars">						<span>							<a class="star-1" href="#">1</a>							<a class="star-2" href="#">2</a>							<a class="star-3" href="#">3</a>							<a class="star-4" href="#">4</a>							<a class="star-5" href="#">5</a>						</span>					</p><select name="rating" id="rating" required="" style="display: none;">
 
 						<option value="">Rate…</option>
 
@@ -532,8 +532,8 @@
 <script src="<?= base_url()?>public/slider/js/main.js"></script>
 
 
- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.3/css/bootstrapValidator.min.css"/>
-  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"></script>
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.3/css/bootstrapValidator.min.css"/>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"></script>
 
 <script type="text/javascript">
 	$(document).ready(function() {

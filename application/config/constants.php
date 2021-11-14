@@ -393,6 +393,8 @@ define('DOMAIN_MAIL', "qd58xk6sqeph@hotelaviana.com");
 define('ADMIN_MAIL',  "sankarnandi1010@gmail.com");
 
 
+define('MAX_ADVANCE_BOOKING_IN_DAYS',  60);
+
 
 
 

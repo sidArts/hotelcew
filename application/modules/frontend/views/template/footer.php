@@ -88,11 +88,11 @@
 						<?php $site_details = $this->Custom->get_site_details(); ?>
 						<strong>Hotel Aviana</strong>
 
-						<div class="ftr_ad"><img src="http://dev6.ivantechnology.in/mountdesertholding/wp-content/themes/mountdesertholding/assets/images/location.png" alt=" "><?= $site_details[0]['address']?></div>
+						<div class="ftr_ad"><img src="https://dev6.ivantechnology.in/mountdesertholding/wp-content/themes/mountdesertholding/assets/images/location.png" alt=" "><?= $site_details[0]['address']?></div>
 
-						<div class="ftr_ad"><img src="http://dev6.ivantechnology.in/mountdesertholding/wp-content/themes/mountdesertholding/assets/images/call.png" alt=""><a href="tel:<?= $site_details[0]['admin_phone']?>"><?= $site_details[0]['admin_phone']?></a></div>
+						<div class="ftr_ad"><img src="https://dev6.ivantechnology.in/mountdesertholding/wp-content/themes/mountdesertholding/assets/images/call.png" alt=""><a href="tel:<?= $site_details[0]['admin_phone']?>"><?= $site_details[0]['admin_phone']?></a></div>
 
-						<div class="ftr_ad"><img src="http://dev6.ivantechnology.in/mountdesertholding/wp-content/themes/mountdesertholding/assets/images/msg.png" alt=""><a href="mailto:<?= $site_details[0]['admin_email']?>"><?= $site_details[0]['admin_email']?></a></div>
+						<div class="ftr_ad"><img src="https://dev6.ivantechnology.in/mountdesertholding/wp-content/themes/mountdesertholding/assets/images/msg.png" alt=""><a href="mailto:<?= $site_details[0]['admin_email']?>"><?= $site_details[0]['admin_email']?></a></div>
 
 					</div>
 
@@ -122,7 +122,7 @@
 
 						<ul class="social d-flex justify-content-end">
 
-							<li><a href="http://www.facebook.com/" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+							<li><a href="https://www.facebook.com/" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
 
 							<li><a href="https://twitter.com/" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
 

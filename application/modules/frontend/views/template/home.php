@@ -161,8 +161,8 @@
 				</div>
 				<div class="col-md-3 home_service">
 						<div class="gallery_box">
-							<a href="http://hotelaviana.com/public/uploads/gallery/1614713972.jpeg" data-toggle="lightbox" data-gallery="example-gallery">
-								<img src="http://hotelaviana.com/public/uploads/gallery/1614713972.jpeg" class="img-fluid">
+							<a href="https://hotelaviana.com/public/uploads/gallery/1614713972.jpeg" data-toggle="lightbox" data-gallery="example-gallery">
+								<img src="https://hotelaviana.com/public/uploads/gallery/1614713972.jpeg" class="img-fluid">
 								<span class="bd_zoom"><i class="fa fa-arrows-alt" aria-hidden="true"></i></span>
 							</a>
 						</div>
@@ -241,7 +241,7 @@
 			
 			<input type="submit" name="submit" class="es_subscription_form_submit es_submit_button es_textbox_button" id="es_subscription_form_submit_1612089134" value="Subscribe">
 			
-			<span class="es_spinner_image" id="spinner-image"  style="display: none;"><img src="http://dev6.ivantechnology.in/mountdesertholding/wp-content/plugins/email-subscribers/lite/public/images/spinner.gif"></span>
+			<span class="es_spinner_image" id="spinner-image"  style="display: none;"><img src="https://dev6.ivantechnology.in/mountdesertholding/wp-content/plugins/email-subscribers/lite/public/images/spinner.gif"></span>
 		</form>
 		<span class="es_subscription_message" id="es_subscription_message_1612089134"></span>
 	</div>
