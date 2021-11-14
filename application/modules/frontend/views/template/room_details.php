@@ -586,7 +586,8 @@
 				        		$('#booking-submit-btn').removeAttr('disabled');
 				        	}
 			        	});
-		        	}		        	
+		        	}
+		        	     	
 		        }
 		    }
     	});
