@@ -220,7 +220,7 @@ class Frontend extends MX_Controller
                 $body_admin .= '<p>Name: '.$_POST['name'].'</p>';
                 $body_admin .= '<p>Email: '.$_POST['email'].'</p>';
                 $body_admin .= '<p>Phone: '.$_POST['phone'].'</p>';
-                $body_admin .= '<p>Room: '.$room_details['name'].'</p>';
+                $body_admin .= '<p>Room: '.$roomdetails['name'].'</p>';
                 $body_admin .= '<p>Checkin: '.$_POST['booking_start_date'].'</p>';
                 $body_admin .= '<p>Checkout: '.$_POST['booking_end_date'].'</p>';
                 $body_admin .= '<p>No of room: '.$_POST['no_of_room'].'</p>';

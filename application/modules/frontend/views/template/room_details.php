@@ -568,18 +568,25 @@
 	        	console.log(startDate, endDate);
 		        if(startDate != '' && endDate != '') {		        	
 		        	var url = `/frontend/getRoomAvailabilityByDateRange/${roomId}/${startDate}/${endDate}`;
-		        	$.get(url, (data) => {
-		        		$('#room-count-by-date-range').text(data['available_rooms']);	        		
-		        		if(data['available_rooms'] == 0) {
-			        		$('#no-room-available-waring').show();
-			        		$('#room-select-form-group').hide();
-		        			$('#booking-submit-btn').attr('disabled', 'disabled');
-			        	} else {
-			        		$('#room-select-form-group').show();
-			        		$('#no-room-available-waring').hide();
-			        		$('#booking-submit-btn').removeAttr('disabled');
-			        	}
-		        	});
+		        	if(new Date(startDate).getTime() >= new Date(endDate).getTime()) {
+		        		$('.datepicker_checkout').val('');
+		        		$('#room-select-form-group').hide();
+		        		$('#no-room-available-waring').hide();
+		        		$('#booking-submit-btn').attr('disabled', 'disabled');
+		        	} else {
+		        		$.get(url, (data) => {
+			        		$('#room-count-by-date-range').text(data['available_rooms']);        		
+			        		if(data['available_rooms'] == 0) {
+				        		$('#no-room-available-waring').show();
+				        		$('#room-select-form-group').hide();
+			        			$('#booking-submit-btn').attr('disabled', 'disabled');
+				        	} else {
+				        		$('#room-select-form-group').show();
+				        		$('#no-room-available-waring').hide();
+				        		$('#booking-submit-btn').removeAttr('disabled');
+				        	}
+			        	});
+		        	}		        	
 		        }
 		    }
     	});
