@@ -148,11 +148,11 @@
 
 </div>
 
-<div>
+<!-- <div>
 
 	<p>Available rooms: <?= $available_room ?></p>
 
-</div>
+</div> -->
 
 <div class="product_meta">
 	
@@ -242,11 +242,17 @@
 
 		  </div>
 
-		  <div class="form-group">
+		  <div class="form-group" id="room-select-form-group">
 
-		    <label for="pwd">No of Rooms (<?= $available_room?> rooms available):<span>*</span></label>
+		    <label for="pwd">No of Rooms (<span id="room-count-by-date-range"></span> rooms available):<span>*</span></label>
 
 		    <input type="text" name="no_of_room" class="form-control">
+
+		  </div>
+
+		  <div class="form-group" id="no-room-available-waring">
+
+		    Sorry, no rooms are available on selected dates!
 
 		  </div>
 
@@ -258,7 +264,7 @@
 
 		  </div> -->
 
-		  <button type="submit" class="btn btn-warning">Submit</button>
+		  <button type="submit" id="booking-submit-btn" class="btn btn-warning" disabled="disabled">Submit</button>
 
 		  <img src="https://dev5.ivantechnology.in/fijihistory/wp-content/themes/myfiji/images/orange_circles.gif" id="loader-img" style="width: 84px;display: none">
 
@@ -538,7 +544,9 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		"use strict";
-
+		$('#room-select-form-group').hide();
+		$('#no-room-available-waring').hide();
+		var roomId = '<?= $roomdetails['id']?>'; 
 		$('#book-now').click(function() {
 
 			$('#myModal').modal('show');
@@ -555,6 +563,24 @@
     		onSelect: function(dateText) {
 		        console.log("Selected date: " + dateText + "; input's current value: " + this.value);
 		        $(this).val(dateText);
+		        var startDate = $(".datepicker_checkin").val().trim();
+	        	var endDate = $(".datepicker_checkout").val().trim();
+	        	console.log(startDate, endDate);
+		        if(startDate != '' && endDate != '') {		        	
+		        	var url = `/frontend/getRoomAvailabilityByDateRange/${roomId}/${startDate}/${endDate}`;
+		        	$.get(url, (data) => {
+		        		$('#room-count-by-date-range').text(data['available_rooms']);	        		
+		        		if(data['available_rooms'] == 0) {
+			        		$('#no-room-available-waring').show();
+			        		$('#room-select-form-group').hide();
+		        			$('#booking-submit-btn').attr('disabled', 'disabled');
+			        	} else {
+			        		$('#room-select-form-group').show();
+			        		$('#no-room-available-waring').hide();
+			        		$('#booking-submit-btn').removeAttr('disabled');
+			        	}
+		        	});
+		        }
 		    }
     	});
 		$('#enquiry-form').bootstrapValidator({

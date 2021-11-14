@@ -43,6 +43,10 @@ class Custom_model extends CI_Model
     $result = $query->result_array();
 
     return $available_room = $result[0]['no_of_room'] - $result[0]['booked_room'];
+
+    $query = $this->db->get_where(
+      'hotel_room_availability_by_date', 
+      "date = '" . $date->format('Y-m-d') . "' AND room_type = '" . $roomDetails['id'] . "'");
   }
 
   public function get_booking_no($value='')
@@ -159,5 +163,69 @@ class Custom_model extends CI_Model
             $body = ob_get_clean();
             $emailSent = email(DOMAIN_MAIL, $to, $subject, $body);
   }
-  
+
+  public function getAllRoomTypeAvailabilityByDateRange($startDate = '', $endDate = '') {
+    $result = [];
+    $this->db->select('*');
+    $this->db->from('hotel');
+    $query = $this->db->get();
+    foreach ($query->result_array() as $row) {
+      // $this->db->select('*');
+      // $this->db->from('hotel_room_availability_by_date');
+      // $this->db->where('room_type', $row['id']);
+      // $this->db->where("date BETWEEN '$startDate' AND '$endDate'");
+      // $this->db->where("available_rooms > 0");
+      // $this->db->order_by('available_rooms', 'ASC');
+      // $this->db->limit(1);
+      // $query = $this->db->get();
+      // $res = $query->row_array();
+      $res = $this->getAvailabilityByDateRange($row['id'], $startDate, $endDate);
+      if(isset($res))
+        array_push($result, $res); 
+    }
+    return $result;
+  }
+
+  public function getAvailabilityByDateRange($roomType = 1, $startDate = '', $endDate = '') {
+    $this->db->select('available_rooms, name, slug, person');
+    $this->db->from('hotel_room_availability_by_date AS hra');
+    $this->db->join('hotel AS h', 'h.id = hra.room_type');
+    $this->db->where('room_type', $roomType);
+    $this->db->where("date BETWEEN '$startDate' AND '$endDate'");
+    // $this->db->where("available_rooms > 0");
+    $this->db->order_by('available_rooms', 'ASC');
+    $this->db->limit(1);
+    $query = $this->db->get();
+    $res = $query->row_array();
+    if(isset($res) && !empty($res))
+      return $res;
+    else {
+      $this->db->select('no_of_room as available_rooms, name, slug, person');
+      $this->db->from('hotel');
+      $this->db->where('id', $roomType);
+      return $this->db->get()->row_array();
+    }
+  }
+
+  public function updateHotelRoomAvailability($date, $roomDetails) {
+    $query = $this->db->get_where(
+      'hotel_room_availability_by_date', 
+      "date = '" . $date->format('Y-m-d') . "' AND room_type = '" . $roomDetails['id'] . "'");
+    $res = $query->row_array();
+    if(!isset($res)) {
+      $this->db->insert('hotel_room_availability_by_date', [
+        'room_type' => $roomDetails['id'],
+        'date' => $date->format('Y-m-d'),
+        'total_rooms' => (int) $roomDetails['no_of_room'],
+        'available_rooms' => ((int)$roomDetails['no_of_room']) - 1
+      ]);
+    } else {
+      $availableRooms = intval($res['available_rooms']) - 1;
+      $this->db->set('available_rooms', $availableRooms);
+      $this->db->where('date', $date->format('Y-m-d'));
+      $this->db->where('room_type', $roomDetails['id']);
+      $this->db->update('hotel_room_availability_by_date');
+    }    
+  }
+
 }

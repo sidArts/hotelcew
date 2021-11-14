@@ -196,6 +196,14 @@ class Frontend extends MX_Controller
             );
 
             if($this->db->insert('st_bookings',$bookingdata)) {
+                $startDate = new DateTime($_POST['booking_start_date']);
+                $endDate = new DateTime($_POST['booking_end_date']);
+
+                while ($startDate < $endDate) {
+                    $this->Custom->updateHotelRoomAvailability($startDate, $roomdetails);
+                    $startDate->modify('+1 day');
+                }
+                
                 // $to = $_POST['email'];
                 // $subject = 'Hotel Aviana | Booking success';
                 // $body = '<h3>YOUR BOOKING HAS BEEN SUCCESSFULLY DONE.</h3>';
@@ -203,7 +211,7 @@ class Frontend extends MX_Controller
                 // $this->Custom->send_aviana_email($to,$subject,$body);
 
                 //get room info
-                $room_details = $this->Custom->room_details_by_id($_POST['room_id']);
+                // $room_details = $this->Custom->room_details_by_id($_POST['room_id']);
 
                 $to_admin = $_POST['email'];
                 $subject_admin = 'Hotel Aviana | New Booking created';
@@ -558,51 +566,7 @@ class Frontend extends MX_Controller
 
 
 
-    public function ridelist()
-
-    {
-
-
-
-
-
-
-
-// store_id
-
-// user_id
-
-
-
-// booking_start_time
-
-// booking_end_time
-
-// total_ride_time
-
-// booking_date
-
-// no_of_ride
-
-// ride_cost
-
-// addition_cost
-
-// total_cost
-
-// created_by
-
-// end_by
-
-// status
-
-// P:Pending,A:Active,C:Canceled,D:Deleted
-
-// payment_status
-
-// created
-
-// Modified
+    public function ridelist() {
 
         $draw = intval($this->input->get("draw"));
 
@@ -692,56 +656,6 @@ class Frontend extends MX_Controller
 
     }
 
-    public function delete_ride()
-
-    {
-
-
-
-        $id = $this->input->post('id');
-
-        $data = $this->Custom->update_rows('st_ride', array('status' => 'D'), $id);
-
-        $this->Custom->update_time_slot('st_ride_time_slot', array('status' => 'D'), $id);
-
-        return $data;
-
-    }
-
-    public function delete_slot()
-
-    {
-
-        $id = $this->input->post('id');
-
-        $data = $this->Custom->update_rows('st_ride_time_slot', array('status' => 'D'), $id);
-
-        echo json_encode(['stat' => "success", "msg" => "time slot deleted successfully", "data" => $data, "id" => $id]);
-
-    }
-
-    public function update_slot()
-
-    {
-
-        $data = $this->input->post();
-
-        $id = $this->input->post('id');
-
-        $slot_array['status'] = ($data['field_name'] == 'timestatus') ? $data['value'] : null;
-
-        $slot_array['ride_base_charge'] = ($data['field_name'] == 'ride_base_charge') ? $data['value'] : null;
-
-        $slot_array['ride_base_time'] = ($data['field_name'] == 'ride_base_time') ? $data['value'] : null;
-
-        $filter =  array_filter($slot_array);
-
-        $this->Custom->update_by_table('st_ride_time_slot', $filter, $id);
-
-        echo json_encode(['status' => 'success', 'msg' => 'Slot updated successfully']);
-
-    }
-
     public function insert_subscriber($value='')
     {
         if(isset($_POST))
@@ -787,6 +701,24 @@ class Frontend extends MX_Controller
         }
     }
     
+
+    public function getAllRoomTypeAvailabilityByDateRange($startDate = '', $endDate = '') {
+        $data = $this->Custom->getAllRoomTypeAvailabilityByDateRange($startDate, $endDate);
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(200)
+            ->set_output(json_encode($data));
+    }
+
+    public function getRoomAvailabilityByDateRange($roomType = 1, $startDate = '', $endDate = '') {
+        $data = $this->Custom->getAvailabilityByDateRange($roomType, $startDate, $endDate);
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(200)
+            ->set_output(json_encode($data));
+    }
+
+
 
 }
 
