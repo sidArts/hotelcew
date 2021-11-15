@@ -9,7 +9,7 @@
 
 
 
-	<div class="inner_banner">
+	<div class="inner_banner show-breadcrumb-only">
 
 				<img class="baner_img_page" src="<?= base_url()?>public/front/assets/images/banner.jpg" alt="Contact Us">
 

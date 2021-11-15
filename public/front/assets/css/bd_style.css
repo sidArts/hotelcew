@@ -1673,3 +1673,7 @@ div.wpcf7-validation-errors, div.wpcf7-acceptance-missing{
     background: #ccc;
     display: none;
 }
+
+.show-breadcrumb-only {
+    height: 58px;
+}

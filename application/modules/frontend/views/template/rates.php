@@ -3,7 +3,7 @@
 <link rel="stylesheet" id="woocommerce-layout-css" href="https://dev6.ivantechnology.in/mountdesertholding/wp-content/plugins/woocommerce/assets/css/woocommerce-layout.css?ver=3.8.1" media="all">
 
 <div class="bd_main">
-	<div class="inner_banner">
+	<div class="inner_banner show-breadcrumb-only">
 
 		<img class="baner_img_page" src="<?= base_url()?>public/front/assets/images/banner.jpg" alt="Room rates">
 
