@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="<?= base_url()?>public/slider/css/swiper.min.css" />
 <link rel="stylesheet" href="<?= base_url()?>public/slider/css/easyzoom.css" />
 <link rel="stylesheet" href="<?= base_url()?>public/slider/css/main.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.3/css/bootstrapValidator.min.css"/>
 <style type="text/css">
 	.swiper-container
 	{
@@ -532,21 +533,55 @@
 
 	
 </div>
-
+<div class="loader-text">Loading...</div>
+<div class="loader"></div>
+<div class="loader-overlay"></div>
 <script src="<?= base_url()?>public/slider/js/swiper.min.js"></script>
 <script src="<?= base_url()?>public/slider/js/easyzoom.js"></script>
 <script src="<?= base_url()?>public/slider/js/main.js"></script>
 
 
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.3/css/bootstrapValidator.min.css"/>
+ 
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"></script>
 
 <script type="text/javascript">
+	var roomId = '<?= $roomdetails['id']?>';
+	var getRoomAvailabilityOnDateSelect = function () {
+		// console.log("Selected date: " + dateText + "; input's current value: " + this.value);
+        // $(this).val(dateText);
+        var startDate = $(".datepicker_checkin").val().trim();
+    	var endDate = $(".datepicker_checkout").val().trim();
+    	console.log(startDate, endDate);
+        if(startDate != '' && endDate != '') {
+        	showHideLoader('show', 'Checking Rooms Availability...');
+        	var url = `/frontend/getRoomAvailabilityByDateRange/${roomId}/${startDate}/${endDate}`;
+        	if(new Date(startDate).getTime() >= new Date(endDate).getTime()) {
+        		$('.datepicker_checkout').val('');
+        		$('#room-select-form-group').hide();
+        		$('#no-room-available-waring').hide();
+        		$('#booking-submit-btn').attr('disabled', 'disabled');
+        	} else {
+        		$.get(url, (data) => {
+	        		$('#room-count-by-date-range').text(data['available_rooms']);        		
+	        		if(data['available_rooms'] == 0) {
+		        		$('#no-room-available-waring').show();
+		        		$('#room-select-form-group').hide();
+	        			$('#booking-submit-btn').attr('disabled', 'disabled');
+		        	} else {
+		        		$('#room-select-form-group').show();
+		        		$('#no-room-available-waring').hide();
+		        		$('#booking-submit-btn').removeAttr('disabled');
+		        	}
+		        	showHideLoader('hide');
+	        	});
+        	}
+        }
+	}
 	$(document).ready(function() {
 		"use strict";
 		$('#room-select-form-group').hide();
 		$('#no-room-available-waring').hide();
-		var roomId = '<?= $roomdetails['id']?>'; 
+		 
 		$('#book-now').click(function() {
 
 			$('#myModal').modal('show');
@@ -556,41 +591,38 @@
 			$('#room_id').val("<?= $roomdetails['id']?>");
 
 		})
-
-		$(".datepicker_checkin,.datepicker_checkout" ).datepicker({
+		var maxStartDateTimestamp = new Date().setHours(0,0,0,0) + (60 * 24 * 60 * 60 * 1000);
+		var maxStartDate = new Date(maxStartDateTimestamp);
+		$(".datepicker_checkin").datepicker({
 			dateFormat: 'yy-mm-dd',
     		minDate : 0,
+    		maxDate: maxStartDate,
     		onSelect: function(dateText) {
-		        console.log("Selected date: " + dateText + "; input's current value: " + this.value);
-		        $(this).val(dateText);
-		        var startDate = $(".datepicker_checkin").val().trim();
-	        	var endDate = $(".datepicker_checkout").val().trim();
-	        	console.log(startDate, endDate);
-		        if(startDate != '' && endDate != '') {		        	
-		        	var url = `/frontend/getRoomAvailabilityByDateRange/${roomId}/${startDate}/${endDate}`;
-		        	if(new Date(startDate).getTime() >= new Date(endDate).getTime()) {
-		        		$('.datepicker_checkout').val('');
-		        		$('#room-select-form-group').hide();
-		        		$('#no-room-available-waring').hide();
-		        		$('#booking-submit-btn').attr('disabled', 'disabled');
-		        	} else {
-		        		$.get(url, (data) => {
-			        		$('#room-count-by-date-range').text(data['available_rooms']);        		
-			        		if(data['available_rooms'] == 0) {
-				        		$('#no-room-available-waring').show();
-				        		$('#room-select-form-group').hide();
-			        			$('#booking-submit-btn').attr('disabled', 'disabled');
-				        	} else {
-				        		$('#room-select-form-group').show();
-				        		$('#no-room-available-waring').hide();
-				        		$('#booking-submit-btn').removeAttr('disabled');
-				        	}
-			        	});
-		        	}
-		        	     	
-		        }
+    			var checkoutMinDate = new Date(dateText);
+    			checkoutMinDate.setDate(checkoutMinDate.getDate() + 1);
+
+    			var checkoutMaxDate = new Date(dateText);
+    			checkoutMaxDate.setDate(checkoutMaxDate.getDate() + 15);
+
+    			$('.datepicker_checkout').datepicker("option", "minDate", checkoutMinDate);
+    			$('.datepicker_checkout').datepicker("option", "maxDate", checkoutMaxDate);
+		        getRoomAvailabilityOnDateSelect(dateText);
 		    }
     	});
+
+		var maxEndDate = new Date(maxStartDateTimestamp + (15 * 24 * 60 * 60 * 1000));
+    	$(".datepicker_checkout").datepicker({
+			dateFormat: 'yy-mm-dd',
+    		minDate : new Date(new Date().setHours(0,0,0,0) + (24 * 60 * 60 * 1000)),
+    		maxDate: maxEndDate,
+    		onSelect: function(dateText) {
+		        getRoomAvailabilityOnDateSelect(dateText);
+		    }
+    	});
+
+		// var maxEndDate = new Date(maxStartDate.getTime() + (5 * 24 * 60 * 60 * 1000));
+		// $(".datepicker_checkout").datepicker({ maxDate: maxEndDate });
+
 		$('#enquiry-form').bootstrapValidator({
 		    message: 'This value is not valid',
 		    fields: {

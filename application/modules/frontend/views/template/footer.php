@@ -166,7 +166,20 @@
 
 <script type="text/javascript" src="<?= base_url()?>public/front/assets/js/custom.js"></script>
 
-
+<script type="text/javascript">
+	var showHideLoader = function (mode = 'show', loaderText = 'Loading...') {
+    	if(mode === 'show') {
+    		$('.loader-text').text(loaderText);
+    		$('.loader').show();
+	    	$('.loader-text').show();
+	    	$('.loader-overlay').show();
+    	} else {
+    		$('.loader').hide();
+	    	$('.loader-text').hide();
+	    	$('.loader-overlay').hide();
+    	}    	
+    }
+</script>
 
 
 

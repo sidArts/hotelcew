@@ -79,7 +79,7 @@
     <!-- Custom Hand Written Js -->
 
     <script src="<?=FRONT_ASSETS?>js/main.js"></script>
-
+    
 </body>
 
 
