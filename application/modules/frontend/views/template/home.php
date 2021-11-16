@@ -161,8 +161,8 @@
 				</div>
 				<div class="col-md-3 home_service">
 						<div class="gallery_box">
-							<a href="https://hotelaviana.com/public/uploads/gallery/1614713972.jpeg" data-toggle="lightbox" data-gallery="example-gallery">
-								<img src="https://hotelaviana.com/public/uploads/gallery/1614713972.jpeg" class="img-fluid">
+							<a href="<?= base_url()?>/public/uploads/gallery/1614713972.jpeg" data-toggle="lightbox" data-gallery="example-gallery">
+								<img src="<?= base_url()?>/public/uploads/gallery/1614713972.jpeg" class="img-fluid">
 								<span class="bd_zoom"><i class="fa fa-arrows-alt" aria-hidden="true"></i></span>
 							</a>
 						</div>

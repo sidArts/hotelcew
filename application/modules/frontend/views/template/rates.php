@@ -1,6 +1,6 @@
-<link rel="stylesheet" id="woocommerce-general-css" href="<?= base_url()?>public/assets/front/css/woocommerce.css">
+<link rel="stylesheet" id="woocommerce-general-css" href="<?= base_url()?>public/front/assets/css/woocommerce.css">
 
-<link rel="stylesheet" id="woocommerce-layout-css" href="<?= base_url()?>public/assets/front/css/woocommerce-layout.css">
+<link rel="stylesheet" id="woocommerce-layout-css" href="<?= base_url()?>public/front/assets/css/woocommerce-layout.css">
 
 <div class="bd_main">
 	<div class="inner_banner show-breadcrumb-only">
