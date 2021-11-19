@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 $route['products/'] 				= "products/index";
 
-$route['admincp/ride/all'] 		                    = "ride/admin/User/list";
+$route['admincp/bookings/all'] = "ride/admin/User/list";
 $route['admincp/ride/global-rate'] 		                    = "ride/admin/User/global_rate";
 $route['admincp/ride/create'] 		                    = "ride/admin/User/create_ride";
 $route['admincp/ride/update/(:any)'] 		            = "ride/admin/User/create_ride/";

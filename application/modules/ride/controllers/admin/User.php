@@ -11,38 +11,19 @@ class User extends MX_Controller
 
     private $data;
 
-    public function __construct()
-
-    {
-
+    public function __construct() {
         parent::__construct();
-
         $this->layout->set("admin-panel");
-
         $this->data = [];
     }
 
-
-
-    public function list()
-    {
-
+    public function list() {
         $breadcrumb = [
-
-            [
-
-                'page' => "Booking List",
-
-            ],
-
+            ['page' => "Booking List"]
         ];
-
-
-
-
         $this->layout->set_breadcumb($breadcrumb);
         $this->layout->set_title("Booking list");
-        $this->layout->view('admin/ride-list', $this->data);
+        $this->layout->view('bookings', $this->data);
     }
 
     public function global_rate($value='')
@@ -82,16 +63,8 @@ class User extends MX_Controller
     public function create_ride()
     {
         $breadcrumb = [
-
-            [
-
-                'page' => "Ride Add",
-
-            ], [
-
-                'page' => "Ride Update",
-            ]
-
+            ['page' => "Ride Add"], 
+            ['page' => "Ride Update"]
         ];
         $id = $this->uri->segment(4);
         $this->data['stores'] = $this->Common->findAll('st_stores');
@@ -135,27 +108,6 @@ class User extends MX_Controller
 
     public function ridelist()
     {
-
-
-
-// store_id
-// user_id
-
-// booking_start_time
-// booking_end_time
-// total_ride_time
-// booking_date
-// no_of_ride
-// ride_cost
-// addition_cost
-// total_cost
-// created_by
-// end_by
-// status
-// P:Pending,A:Active,C:Canceled,D:Deleted
-// payment_status
-// created
-// Modified
         $draw = intval($this->input->get("draw"));
         // $start = intval($this->input->get("start"));
         // $length = intval($this->input->get("length"));

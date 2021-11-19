@@ -21,7 +21,7 @@
                 <a href="javascript:void(0)" class="dropdown-btn <?php echo (@$this->uri->segment(2) =='stores')? "active":'' ?>"><i class="fa fa-gear"></i>Rooms</a>
                 <ul class="dropdown-container <?php echo (@$this->uri->segment(2) =='stores')? "open":'' ?>">
                     <li>
-                        <a href="<?= ADMIN_URL."stores/all" ?>">Rooms</a>
+                        <a href="<?= ADMIN_URL."rooms/all" ?>">Rooms</a>
                     </li>
                    
                 </ul>
@@ -74,7 +74,7 @@
                 <a href="javascript:void(0)" class="dropdown-btn <?php echo (@$this->uri->segment(2) =='ride')? "active":'' ?>"><i class="fa fa-building"></i>Bookings</a>
                 <ul class="dropdown-container <?php echo (@$this->uri->segment(2) =='ride')?"open":'' ?>">
                     <li>
-                        <a href="<?= ADMIN_URL."ride/all" ?>">Bookings</a>
+                        <a href="<?= ADMIN_URL."bookings/all" ?>">Bookings</a>
                     </li>
                     <!-- <li>
                         <a href="<?= ADMIN_URL."ride/global-rate" ?>">Global Rate</a>

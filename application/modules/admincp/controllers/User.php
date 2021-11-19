@@ -18,12 +18,12 @@ class User extends MX_Controller
         $this->data = [];
     }
 
-    public function create_user()
+    public function updateRoom()
     {
         $breadcrumb = [
             [
-                'page' => "Create Room",
-                'url' => ADMIN_URL . 'settings/content-types'
+                'page' => "Room List",
+                'url' => ADMIN_URL . 'rooms/all'
             ], [
                 'page' => "Update Room"
             ]
@@ -136,7 +136,7 @@ class User extends MX_Controller
 
 
 
-    public function roles()
+    public function roomList()
     {
         $breadcrumb = [
             [
@@ -148,9 +148,9 @@ class User extends MX_Controller
         $this->layout->set_breadcumb($breadcrumb);
         $this->layout->set_title('Room List');
         $this->layout->set("admin-panel");
-        $this->layout->view('user/user-roles', $this->data);
+        $this->layout->view('roomListView', $this->data);
     }
-    public function store_users()
+    public function roomListAPI()
     {
 
         $draw = intval($this->input->get("draw"));
@@ -177,9 +177,9 @@ class User extends MX_Controller
                 $row->back_rate,
                 $row->gst,
                 $row->net_rate,
-                $available_rooms,
+                // $available_rooms,
                 "<a href='" . ADMIN_URL . 'hotel-image/' . encrypt($row->id) . "' class='btn btn-info'>Images</a>",
-                "<a href='" . ADMIN_URL . 'stores/update/' . encrypt($row->id) . "' class='btn btn-info'><i class='fa fa-edit'></i></a>"
+                "<a href='" . ADMIN_URL . 'rooms/update/' . encrypt($row->id) . "' class='btn btn-info'><i class='fa fa-edit'></i></a>"
 
             );
         }
@@ -230,15 +230,13 @@ class User extends MX_Controller
         exit();
     }
 
-    public function submit_site_settings($value='')
-    {
-        # code...
+    public function submit_site_settings($value='') {
         $data = $this->input->post();
         $data = $this->Custom->update_by_table('site_settings', $data, 1);
         echo json_encode(["stat"=>"success","msg"=>"Settings updated Successfully"]);
     }
-    public function submitstoretypeuser()
-    {
+
+    public function upsertRoomDetails() {
       
         $id = $this->input->post('store_id');
         if (empty($id)) {

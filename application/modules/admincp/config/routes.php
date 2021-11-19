@@ -5,16 +5,16 @@ $route['admincp/admin-login']                     = "admincp/check_admin_login";
 $route['admincp/settings/general']                 = "admincp/general_settings";
 $route['admincp/general_settings_post']         = "admincp/general_settings_post";
 
-$route['admincp/create/submit-user']            = "user/submitstoretypeuser/";
+$route['admincp/create/submit-user']            = "user/upsertRoomDetails/";
 
 $route['admincp/admin-logout']                     = "admincp/admin_logout";
 $route['admincp/stores/create']                   = "user/create_user/";
 
-$route['admincp/stores/update/(:any)']                   = "user/create_user/";
+$route['admincp/rooms/update/(:any)']                   = "user/updateRoom/";
 
-$route['admincp/stores/all']                         = "user/roles/";
-$route['admincp/users/stores']                     = "user/store_users/";
-$route['admincp/users/remove']                     = "user/delete_user/";
+$route['admincp/rooms/all'] = "user/roomList";
+$route['admincp/rooms/roomListAPI'] = "user/roomListAPI/";
+$route['admincp/users/remove'] = "user/delete_user/";
 $route['admincp/users/opcodecheck/']             = "user/checkopcode/";
 $route['admincp/users/state']                     = "user/state/";
 $route['admincp/users/cities']                     = "user/cities/";

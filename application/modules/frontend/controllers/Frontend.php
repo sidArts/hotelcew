@@ -614,7 +614,7 @@ class Frontend extends MX_Controller
 
                 ($row->status == 'A') ? 'Active' : 'Checkout',
 
-                "<a href='" . ADMIN_URL . 'stores/update/' . $row->id . "' class='btn btn-info' title='Checkout'><i class='fa fa-check'></i></a>"
+                "<a href='" . ADMIN_URL . 'rooms/update/' . $row->id . "' class='btn btn-info' title='Checkout'><i class='fa fa-check'></i></a>"
 
                 // (!empty($row->ride_img)) ? "<img src='" . base_url() . '/public/uploads/ride/' . $row->ride_img . "' height='50px' width='50px'/>" : "<img src='https://previews.123rf.com/images/pavelstasevich/pavelstasevich1811/pavelstasevich181101065/112815953-no-image-available-icon-flat-vector.jpg' height='50px' width='50px'>",
 

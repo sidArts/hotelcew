@@ -32,7 +32,7 @@
 
 		<span class="page-buttons">
 
-			<a href="<?= ADMIN_URL . 'ride/all' ?>" class="header-button"><i class="fa fa-angle-double-left"></i> Back</a>
+			<a href="<?= ADMIN_URL . 'bookings/all' ?>" class="header-button"><i class="fa fa-angle-double-left"></i> Back</a>
 
 
 
@@ -770,7 +770,7 @@ function remove(id){
 
 							toastr.success(obj.msg);
 
-						  $(location).attr('href', "<?= ADMIN_URL . 'ride/all' ?>")
+						  $(location).attr('href', "<?= ADMIN_URL . 'bookings/all' ?>")
 
 						} else if (obj.stat == 'error') {
 

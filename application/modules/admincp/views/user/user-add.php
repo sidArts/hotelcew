@@ -15,12 +15,12 @@
 	<div class="panel-heading">
 		<?= (@$storeDetails) ? 'Update' : 'Add New' ?> Room Information
 		<span class="page-buttons">
-			<a href="<?= ADMIN_URL . 'stores/all' ?>" class="header-button"><i class="fa fa-angle-double-left"></i> Back</a>
+			<a href="<?= ADMIN_URL . 'rooms/all' ?>" class="header-button"><i class="fa fa-angle-double-left"></i> Back</a>
 			<!-- <a href="<?= ADMIN_URL . 'create/user' ?>" class="header-button"><i class="fa fa-plus-circle"></i> New</a> -->
 		</span>
 	</div>
 	<div class="panel-body">
-		<form method="POST" action="<?= ADMIN_URL . 'user/submitstoretypeuser/' ?>" id="store" enctype="multipart/form-data">
+		<form method="POST" action="<?= ADMIN_URL . 'user/upsertRoomDetails/' ?>" id="store" enctype="multipart/form-data">
 			<input type="hidden" id="store_id" name="store_id" value="<?php echo (!empty($storeDetails['id'])) ? $storeDetails['id'] : ''; ?>">
 			<!-- <input type="hidden" id="qrcode" name="qrcode" value="<?php //echo mt_rand(000, 999) . date("m");  ?>"> -->
 			<!-- <input type="hidden" id="qrcode" name="qrcode" value="<?php echo (!empty($storeDetails['qr_code']))?$storeDetails['qr_code']:''; ?>"/> -->
@@ -212,7 +212,7 @@
 						let obj = JSON.parse(response);
 						if (obj.stat == 'success') {
 							toastr.success(obj.msg);
-							$(location).attr('href', "<?= ADMIN_URL . 'stores/all' ?>")
+							$(location).attr('href', "<?= ADMIN_URL . 'rooms/all' ?>")
 						} else if (obj.stat == 'error') {
 							toastr.error(obj.msg);
 						}

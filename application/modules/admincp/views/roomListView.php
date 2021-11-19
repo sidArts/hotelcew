@@ -37,7 +37,7 @@
 						<th>Back rate</th>
 						<th>GST</th>
 						<th>Net rate</th>
-						<th>Available rooms</th>
+						<!-- <th>Available rooms</th> -->
 						<th>Image</th>
 						<th>Action</th>
 						
@@ -122,22 +122,22 @@ $(document).ready(function() {
     $('#store_table').DataTable({
      
     	ajax:{
-    		url:"<?=ADMIN_URL.'user/store_users/'?>",
+    		url:"<?=ADMIN_URL.'user/roomListAPI/'?>",
     		type : 'GET',
 
     	},
     	 "columns": [
             { "data": 0},
             { "data": 1},
-            { "data": 2 },
+            { "data": 2},
             { "data": 3},
             { "data": 4},
             { "data": 5},
             { "data": 6},
             { "data": 7},
+            // { "data": 8},
             { "data": 8},
-            { "data": 9},
-            { "data": 10}
+            { "data": 9}
         ]
     });
 });
