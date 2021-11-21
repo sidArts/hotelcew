@@ -302,6 +302,13 @@ $(document).ready(function() {
 		}		
 	});
 
+	$.fn.dataTable.ext.buttons.refresh = {
+	    text: 'Refresh'
+	  , action: function ( e, dt, node, config ) {
+	      dt.clear().draw();
+	      dt.ajax.reload();
+	    }
+	};
     var bookingsDatatable = $('#rides').DataTable({
     	"aaSorting": [],
      	dom: 'Bfrtip',
@@ -322,6 +329,12 @@ $(document).ready(function() {
                     columns: [0,1, 2, 3,4,5,6,7,8 ]
                 }
             },
+            {
+			    text: "<span>Refresh Tab</span>",
+			    action: function (e, dt, node, config) {
+			        dt.ajax.reload(null, false);
+			    }
+			}
             //'colvis'
         ],
     	ajax:{

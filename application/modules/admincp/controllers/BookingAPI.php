@@ -43,11 +43,15 @@ class BookingAPI extends MX_Controller {
 		$request = json_decode($stream_clean, true);
 		if(!isset($request) || !isset($request['status_id']) || !isset($request['booking_id']) || !isset($request['comments']))
 			return $this->output->set_status_header(500);
+        $this->db->trans_start();
 		$this->db->insert('booking_detail_history', $request);
-		$this->db->update('st_bookings', [
-			'id' => $request['booking_id'],
-			'status' => $request['status_id']
-		]);
+
+        $this->db->reset_query();
+        
+        $this->db->set('status', $request['status_id']);
+        $this->db->where('id', $request['booking_id']);
+        $this->db->update('st_bookings');
+        $this->db->trans_complete(); 
 		return $this->output->set_status_header(200);
     }
 
