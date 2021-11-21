@@ -97,6 +97,37 @@
   </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="edit-booking-status-modal">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Booking Status</h5>
+      </div>
+      <div class="modal-body">
+      	<form id="update-booking-status-form">
+      		<input type="hidden" name="booking_id">
+	        <div class="form-group">
+	        	<label>Status</label>
+	        	<select class="form-control" name="status_id">
+	        		<option>asdfadf</option>
+	        	</select>
+	        </div>
+	        <div class="form-group">
+	        	<label>Comments</label>
+	        	<textarea class="form-control" name="comments"></textarea>
+	        </div>
+	        
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button id="submit-update-booking-status-form" class="btn btn-primary">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="booking_cancel_modal" class="modal fade" role="dialog">
   <div class="modal-dialog">
 
@@ -192,7 +223,59 @@ $(".deleteselected").click(function(){
   });
 //}
 });
+
+function getFormData($form){
+    var unindexed_array = $form.serializeArray();
+    var indexed_array = {};
+
+    $.map(unindexed_array, function(n, i){
+        indexed_array[n['name']] = n['value'];
+    });
+
+    return indexed_array;
+}
 $(document).ready(function() {
+	$('#submit-update-booking-status-form').click(() => {
+		var updateBookingformData = getFormData($('#update-booking-status-form'));
+		var url = '/admincp/BookingAPI/setStatus';
+		showHideLoader('show');
+		$.ajax({
+            type: 'POST',
+            url: url,
+            data: JSON.stringify(updateBookingformData),
+            contentType: "application/json",
+            dataType: 'json',
+            success: (data) => {
+				console.log(data);
+				bookingsDatatable.ajax.reload();
+				$('#edit-booking-status-modal').modal('hide');
+				showHideLoader('hide');
+			},
+			error: err => { 
+				console.log(err);
+				showHideLoader('hide');
+			}
+        });
+	});
+
+	$('body').on('click', '.edit-booking-status', function() {
+		var bookingId = $(this).attr('booking-id');
+		var $select = $('#update-booking-status-form > div.form-group > select[name="status_id"]');
+		$('#update-booking-status-form > input[type="hidden"]').val(bookingId);
+		$select.html('');
+		showHideLoader('show');
+		$.get(`/admincp/BookingAPI/getChildStatusList/${bookingId}`, (data) => {
+			data.forEach(d => {
+				$select.append(
+					$('<option>', {'text': d.name, 'value': d.status_id})
+				);
+			})
+			
+			$('#edit-booking-status-modal').modal('show');
+			showHideLoader('hide');
+		});
+		
+	})
 	$('#cancellation-reason-btn').click(() => {
 		let desc = '';
 		if($('#invalid-documents-checkbox').prop('checked')) {
@@ -219,7 +302,7 @@ $(document).ready(function() {
 		}		
 	});
 
-    $('#rides').DataTable({
+    var bookingsDatatable = $('#rides').DataTable({
     	"aaSorting": [],
      	dom: 'Bfrtip',
         buttons: [

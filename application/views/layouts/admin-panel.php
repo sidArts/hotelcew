@@ -259,7 +259,18 @@
 		    var add_photo_src = "<?=timthumb(DEFAULT_IMAGE, 300)?>";
 
 
-
+		    var showHideLoader = function (mode = 'show', loaderText = 'Loading...') {
+		    	if(mode === 'show') {
+		    		$('.loader-text').text(loaderText);
+		    		$('.loader').show();
+			    	$('.loader-text').show();
+			    	$('.loader-overlay').show();
+		    	} else {
+		    		$('.loader').hide();
+			    	$('.loader-text').hide();
+			    	$('.loader-overlay').hide();
+		    	}    	
+		    };
 		    $(document).ready(function(){
 
 				let result 		= document.querySelector('.result'),
@@ -285,88 +296,88 @@
 
 
 				// on change show image with crop options
+				if(upload != null)
+					upload.addEventListener('change', (e) => {
 
-				upload.addEventListener('change', (e) => {
+					    if (e.target.files.length) {
 
-				    if (e.target.files.length) {
+					        // start file reader
 
-				        // start file reader
+					        const reader = new FileReader();
 
-				        const reader = new FileReader();
+					        reader.onload = (e) => {
 
-				        reader.onload = (e) => {
+					            if (e.target.result) {
 
-				            if (e.target.result) {
+			                		$("#myModalRCrop").modal({
 
-		                		$("#myModalRCrop").modal({
+			                			backdrop: 'static',
 
-		                			backdrop: 'static',
+			    						keyboard: false
 
-		    						keyboard: false
+			                		});
 
-		                		});
-
-		                		$("#overlay").remove();
+			                		$("#overlay").remove();
 
 
 
-				                // create new image
+					                // create new image
 
-				                let img = document.createElement('img');
+					                let img = document.createElement('img');
 
-				                img.id = 'image';
+					                img.id = 'image';
 
-				                img.src = e.target.result
+					                img.src = e.target.result
 
-				                // clean result before
+					                // clean result before
 
-				                result.innerHTML = '';
+					                result.innerHTML = '';
 
-				                // append new image
+					                // append new image
 
-				                result.appendChild(img);
+					                result.appendChild(img);
 
-				                // show save btn and options
+					                // show save btn and options
 
-				                save.classList.remove('hide');
+					                save.classList.remove('hide');
 
-				                options.classList.remove('hide');
+					                options.classList.remove('hide');
 
-				                cropper = new Cropper(img, {
+					                cropper = new Cropper(img, {
 
-				                	aspectRatio 		: ratio,
+					                	aspectRatio 		: ratio,
 
-									dragCrop			: true,
+										dragCrop			: true,
 
-									zoomable 			: true,
+										zoomable 			: true,
 
-									viewMode 			: 2,
+										viewMode 			: 2,
 
-									minCropBoxWidth		: 200,
+										minCropBoxWidth		: 200,
 
-									minCropBoxHeight	: 200,
+										minCropBoxHeight	: 200,
 
-									background			: false,
+										background			: false,
 
-									minContainerHeight	: 400,
+										minContainerHeight	: 400,
 
-									minContainerWidth	: 580,
+										minContainerWidth	: 580,
 
-									minCanvasHeight		: 400,
+										minCanvasHeight		: 400,
 
-									minCanvasWidth		: 580,
+										minCanvasWidth		: 580,
 
-				                });
+					                });
 
-				            }
+					            }
 
-				        };
+					        };
 
-				        reader.readAsDataURL(e.target.files[0]);
+					        reader.readAsDataURL(e.target.files[0]);
 
-				    }
+					    }
 
-				});
+					});
 
 
 

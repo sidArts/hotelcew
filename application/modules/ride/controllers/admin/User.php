@@ -111,9 +111,10 @@ class User extends MX_Controller
         $draw = intval($this->input->get("draw"));
         // $start = intval($this->input->get("start"));
         // $length = intval($this->input->get("length"));
-        $this->db->select('*');
-        $this->db->from('st_bookings');
-        $this->db->where("status !=", "D"); 
+        $this->db->select('b.*, bs.name as booking_status');
+        $this->db->from('st_bookings b');
+        $this->db->join('booking_status bs', 'b.status = CONVERT (bs.id, char(16))');
+        // $this->db->where("status !=", "D"); 
         $this->db->order_by('id desc');
         // $this->db->join('st_stores', 'st_stores.id = st_ride.store_id');
         
@@ -134,10 +135,15 @@ class User extends MX_Controller
                 // $row->no_of_person,
                 number_format($row->total_cost,2),
 
-                ($row->status == 'A') ? "<button onclick='checkout(".$row->id.")' class='btn btn-info' title='Checkout'>Checkout</button>" : (($row->status == 'B') ? 'Cancelled' : 'Completed').'<br>'.date('F j, Y, g:i a',$row->checkout_time),
-                "<button class='btn btn-info' title='Details' onclick='booking_details(".$row->id.")'><i class='fa fa-eye'></i></button> &nbsp;&nbsp;".
-                ((($row->status === 'A') ? ("<button type='button' class='btn btn-danger' id='del-" . $row->id . "' onclick='cancelBooking(" . $row->id . ")'><i class='fa fa-ban'></i></button>") : ''))
+                $row->booking_status . 
+                "&nbsp;&nbsp;<button booking-id='" . $row->id . "' class='edit-booking-status btn btn-default btn-xs'>
+                    <i class='fa fa-pencil'></i>
+                </button>",
+                // ($row->status == 'A') ? "<button onclick='checkout(".$row->id.")' class='btn btn-info' title='Checkout'>Checkout</button>" : (($row->status == 'B') ? 'Cancelled' : 'Completed').'<br>'.date('F j, Y, g:i a',$row->checkout_time),
+                "<button class='btn btn-info' title='Details' onclick='booking_details(".$row->id.")'><i class='fa fa-eye'></i></button> &nbsp;&nbsp;"
+                // ((($row->status === 'A') ? ("<button type='button' class='btn btn-danger' id='del-" . $row->id . "' onclick='cancelBooking(" . $row->id . ")'><i class='fa fa-ban'></i></button>") : ''))
 
+                
             );
         }
         //print_r(count($query)); exit;

@@ -178,7 +178,7 @@
 	    	$('.loader-text').hide();
 	    	$('.loader-overlay').hide();
     	}    	
-    }
+    };
 </script>
 
 
