@@ -207,7 +207,7 @@ class Custom_model extends CI_Model
     }
   }
 
-  public function updateHotelRoomAvailability($date, $roomDetails) {
+  public function updateHotelRoomAvailability($date, $roomDetails, $roomCount = 1) {
     $query = $this->db->get_where(
       'hotel_room_availability_by_date', 
       "date = '" . $date->format('Y-m-d') . "' AND room_type = '" . $roomDetails['id'] . "'");
@@ -217,10 +217,10 @@ class Custom_model extends CI_Model
         'room_type' => $roomDetails['id'],
         'date' => $date->format('Y-m-d'),
         'total_rooms' => (int) $roomDetails['no_of_room'],
-        'available_rooms' => ((int)$roomDetails['no_of_room']) - 1
+        'available_rooms' => ((int)$roomDetails['no_of_room']) - $roomCount
       ]);
     } else {
-      $availableRooms = intval($res['available_rooms']) - 1;
+      $availableRooms = intval($res['available_rooms']) - $roomCount;
       $this->db->set('available_rooms', $availableRooms);
       $this->db->where('date', $date->format('Y-m-d'));
       $this->db->where('room_type', $roomDetails['id']);

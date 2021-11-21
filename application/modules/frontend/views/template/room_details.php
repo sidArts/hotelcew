@@ -676,7 +676,7 @@
 		                    message: 'No of rooms is required and can\'t be empty'
 		                },
 		                regexp: {
-	                        regexp: /^[1-9]+$/,
+	                        regexp: /^[0-9]+$/,
 	                        message: 'No of rooms can only consist of number'
 	                    },
 		            }

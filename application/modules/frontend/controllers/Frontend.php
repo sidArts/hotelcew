@@ -200,7 +200,8 @@ class Frontend extends MX_Controller
                 $endDate = new DateTime($_POST['booking_end_date']);
 
                 while ($startDate < $endDate) {
-                    $this->Custom->updateHotelRoomAvailability($startDate, $roomdetails);
+                    $this->Custom->updateHotelRoomAvailability(
+                        $startDate, $roomdetails, $bookingdata['no_of_room']);
                     $startDate->modify('+1 day');
                 }
                 
