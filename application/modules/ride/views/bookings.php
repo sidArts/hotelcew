@@ -39,8 +39,8 @@
 						<th>Name</th>
 						<th>Mobile</th>
 						<!-- <th>Email</th> -->
-						<th>Checkin</th>
-						<th>Checkout</th>
+						<th>Start Date</th>
+						<th>End Date</th>
 						<th>Book date</th>
 						<th>Rooms</th>
 						<!-- <th>Person</th> -->
