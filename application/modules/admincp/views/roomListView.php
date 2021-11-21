@@ -37,6 +37,7 @@
 						<th>Back rate</th>
 						<th>GST</th>
 						<th>Net rate</th>
+						<th>Total Rooms</th>
 						<!-- <th>Available rooms</th> -->
 						<th>Image</th>
 						<th>Action</th>
@@ -135,9 +136,9 @@ $(document).ready(function() {
             { "data": 5},
             { "data": 6},
             { "data": 7},
-            // { "data": 8},
             { "data": 8},
-            { "data": 9}
+            { "data": 9},
+            { "data": 10}
         ]
     });
 });

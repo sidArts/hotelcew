@@ -165,7 +165,7 @@ class User extends MX_Controller
         // $this->db->where("st_stores.status !=", "D");
         $query = $this->db->get()->result();
         foreach ($query as $key => $row) {
-           $available_rooms =  $this->Custom->get_available_room($row->id);
+           // $available_rooms =  $this->Custom->get_available_room($row->id);
             //$image = "<img src=''>";
             $data[] = array(
                 "<input type='checkbox' class='check' value='" . $row->id . "'/>",
@@ -177,7 +177,7 @@ class User extends MX_Controller
                 $row->back_rate,
                 $row->gst,
                 $row->net_rate,
-                // $available_rooms,
+                $row->no_of_room,
                 "<a href='" . ADMIN_URL . 'hotel-image/' . encrypt($row->id) . "' class='btn btn-info'>Images</a>",
                 "<a href='" . ADMIN_URL . 'rooms/update/' . encrypt($row->id) . "' class='btn btn-info'><i class='fa fa-edit'></i></a>"
 
