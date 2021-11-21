@@ -135,10 +135,10 @@ class User extends MX_Controller
                 // $row->no_of_person,
                 number_format($row->total_cost,2),
 
-                $row->booking_status . 
+                $row->booking_status . (($row->status == 8 || $row->status == 6 || $row->status == 9) ? '' :
                 "&nbsp;&nbsp;<button booking-id='" . $row->id . "' class='edit-booking-status btn btn-default btn-xs'>
                     <i class='fa fa-pencil'></i>
-                </button>",
+                </button>"),
                 // ($row->status == 'A') ? "<button onclick='checkout(".$row->id.")' class='btn btn-info' title='Checkout'>Checkout</button>" : (($row->status == 'B') ? 'Cancelled' : 'Completed').'<br>'.date('F j, Y, g:i a',$row->checkout_time),
                 "<button class='btn btn-info' title='Details' onclick='booking_details(".$row->id.")'><i class='fa fa-eye'></i></button> &nbsp;&nbsp;"
                 // ((($row->status === 'A') ? ("<button type='button' class='btn btn-danger' id='del-" . $row->id . "' onclick='cancelBooking(" . $row->id . ")'><i class='fa fa-ban'></i></button>") : ''))
