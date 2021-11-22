@@ -92,6 +92,8 @@ class BookingAPI extends MX_Controller {
             ->set_output(json_encode($data));
     }
 
+    
+
 }
 
 ?>

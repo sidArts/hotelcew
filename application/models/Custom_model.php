@@ -26,6 +26,36 @@ class Custom_model extends CI_Model
   	
   }
 
+  public function room_rates_by_date($slug='', $startDate = '', $endDate = '') {
+    $roomRates = [];
+    $startDate = date_create_from_format('Y-m-d', $startDate);
+    $endDate = date_create_from_format('Y-m-d', $endDate);
+    // return var_dump($startDate);
+    while($startDate < $endDate) {
+      $sql = "SELECT h.name, h.slug, h.person, h.description, rrbdow.day_of_week, 
+      IF(rrbd.rate IS NULL, IF(rrbdow.rate IS NULL, h.back_rate, rrbdow.rate), rrbd.rate) as back_rate, 
+      h.back_rate as actual_rate, rrbdow.rate as day_of_week_rate, rrbd.rate as special_day_rate 
+      FROM hotel h 
+      left JOIN room_rates_by_day_of_week rrbdow
+      ON rrbdow.room_id = h.id 
+      AND rrbdow.day_of_week = CAST((DAYOFWEEK(?) - 1) as char) COLLATE utf8_unicode_ci 
+      left JOIN room_rates_by_date rrbd 
+      ON rrbd.room_id = h.id AND rrbd.date = ? 
+      WHERE h.slug = ?";
+      $result = $this->db->query($sql, [
+        $startDate->format('Y-m-d'), 
+        $startDate->format('Y-m-d'), 
+        $slug
+      ])->row_array();
+      if(isset($result)) {
+        $result['date'] = $startDate->format('Y-m-d');
+        array_push($roomRates, $result);
+      }
+      $startDate->modify('+1 day');
+    }
+    return $roomRates;
+  }
+
   public function room_details_by_id($id='')
   {
   	return $room_details   = $this->Common->find([

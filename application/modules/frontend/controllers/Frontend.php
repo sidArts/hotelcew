@@ -143,9 +143,7 @@ class Frontend extends MX_Controller
 
 
 
-    public function createBooking($value='')
-
-    {
+    public function createBooking($value='') {
 
         if(isset($_POST)) {
             $roomdetails = $this->Custom->room_details_by_id($_POST['room_id']);
@@ -720,6 +718,12 @@ class Frontend extends MX_Controller
     }
 
 
-
+    public function getRoomRateByDate($slug = '', $startDate = '', $endDate = '') {
+        $roomRate = $this->Custom->room_rates_by_date($slug, $startDate, $endDate);
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(200)
+            ->set_output(json_encode($roomRate));
+    }
 }
 

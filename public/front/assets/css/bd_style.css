@@ -1677,3 +1677,8 @@ div.wpcf7-validation-errors, div.wpcf7-acceptance-missing{
 .show-breadcrumb-only {
     height: 58px;
 }
+
+.padding-top-bottom-10 {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
