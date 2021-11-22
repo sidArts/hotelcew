@@ -693,4 +693,25 @@ define('WISHLIST', 						DB_PREFIX."wishlist");
 define('ROOM', 					        DB_PREFIX."hotel");
 
 
+// Hotel booking special status constants
+
+define('UNABLE_TO_CONTACT_CUSTOMER', 3);
+define('CHECKIN_CANCELLED', 6);
+define('CHECKOUT', 8);
+define('CANCELLED', 9);
+
+// Special status id list
+define('SPECIAL_BOOKING_STATUS_LIST', [
+	UNABLE_TO_CONTACT_CUSTOMER,
+    CHECKIN_CANCELLED,
+    CHECKOUT,
+    CANCELLED
+]);
+
+
+
+
+
+
+
 

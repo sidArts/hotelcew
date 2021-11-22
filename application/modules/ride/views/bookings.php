@@ -330,7 +330,7 @@ $(document).ready(function() {
                 }
             },
             {
-			    text: "<span>Refresh Tab</span>",
+			    text: "<i class='fa fa-refresh'></i>",
 			    action: function (e, dt, node, config) {
 			        dt.ajax.reload(null, false);
 			    }
@@ -352,11 +352,7 @@ $(document).ready(function() {
             { "data": 6},
             { "data": 7},
             { "data": 8},
-			{ "data": 9},
-			//{ "data": 10},
-			// { "data": 11},
-			// { "data": 12},
-			// { "data": 13},
+			{ "data": 9}
         ]
     });
 });

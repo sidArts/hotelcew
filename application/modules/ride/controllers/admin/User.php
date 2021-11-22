@@ -135,7 +135,7 @@ class User extends MX_Controller
                 // $row->no_of_person,
                 number_format($row->total_cost,2),
 
-                $row->booking_status . (($row->status == 8 || $row->status == 6 || $row->status == 9) ? '' :
+                $row->booking_status . (in_array($row->status, SPECIAL_BOOKING_STATUS_LIST) ? '' :
                 "&nbsp;&nbsp;<button booking-id='" . $row->id . "' class='edit-booking-status btn btn-default btn-xs'>
                     <i class='fa fa-pencil'></i>
                 </button>"),

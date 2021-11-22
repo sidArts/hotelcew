@@ -41,16 +41,42 @@ class BookingAPI extends MX_Controller {
     public function setStatus() {
     	$stream_clean = $this->security->xss_clean($this->input->raw_input_stream);
 		$request = json_decode($stream_clean, true);
+        
 		if(!isset($request) || !isset($request['status_id']) || !isset($request['booking_id']) || !isset($request['comments']))
 			return $this->output->set_status_header(500);
+
+        $this->db->select('booking_start_date, booking_end_date, no_of_room, room_id');
+        $this->db->where('id', $request['booking_id']);
+        $query = $this->db->get('st_bookings');
+        $booking = $query->row_array();
+
+        $roomDetails = $this->db->get_where('hotel', 
+            ['id' => $booking['room_id']])->row_array();     
+
         $this->db->trans_start();
-		$this->db->insert('booking_detail_history', $request);
+		
+        $this->db->insert('booking_detail_history', $request);
 
         $this->db->reset_query();
         
         $this->db->set('status', $request['status_id']);
         $this->db->where('id', $request['booking_id']);
         $this->db->update('st_bookings');
+
+        $this->db->reset_query();
+
+        if (in_array($request['status_id'], SPECIAL_BOOKING_STATUS_LIST)) {
+            
+            $startDate = new DateTime($booking['booking_start_date']);
+            $endDate = new DateTime($booking['booking_end_date']);
+
+            while ($startDate < $endDate) {
+                $this->Custom->updateHotelRoomAvailability(
+                    $startDate, $roomDetails, -$booking['no_of_room']);
+                $startDate->modify('+1 day');
+            }
+        }
+
         $this->db->trans_complete(); 
 		return $this->output->set_status_header(200);
     }

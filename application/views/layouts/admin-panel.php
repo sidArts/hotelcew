@@ -250,7 +250,9 @@
 
 		</div>
 
-
+		<div class="loader-text">Loading...</div>
+		<div class="loader"></div>
+		<div class="loader-overlay"></div>
 
 		<!-- R-Crop Script-->
 
