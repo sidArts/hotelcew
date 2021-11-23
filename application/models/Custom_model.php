@@ -33,7 +33,8 @@ class Custom_model extends CI_Model
     // return var_dump($startDate);
     while($startDate < $endDate) {
       $sql = "SELECT h.name, h.slug, h.person, h.description, rrbdow.day_of_week, 
-      IF(rrbd.rate IS NULL, IF(rrbdow.rate IS NULL, h.back_rate, rrbdow.rate), rrbd.rate) as back_rate, 
+      IF(rrbd.rate IS NULL, IF(rrbdow.rate IS NULL, h.back_rate, rrbdow.rate), rrbd.rate) as back_rate,
+      IF(rrbd.rate IS NULL, IF(rrbdow.rate IS NULL, h.gst, rrbdow.gst), rrbd.gst) as gst, 
       h.back_rate as actual_rate, rrbdow.rate as day_of_week_rate, rrbd.rate as special_day_rate 
       FROM hotel h 
       left JOIN room_rates_by_day_of_week rrbdow

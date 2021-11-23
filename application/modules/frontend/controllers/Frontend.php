@@ -147,11 +147,10 @@ class Frontend extends MX_Controller
 
         if(isset($_POST)) {
             $roomdetails = $this->Custom->room_details_by_id($_POST['room_id']);
-
-            $back_rate = $roomdetails['back_rate'];
-            $gst = $roomdetails['gst']*$_POST['no_of_room'];
-            //$capacity = $roomdetails['person'];
-            //$booked_person = $_POST['person'];
+            $roomRates = $this->Custom->room_rates_by_date($roomdetails['slug'], $_POST['booking_start_date'], $_POST['booking_end_date']);
+            // $back_rate = $roomdetails['back_rate'];
+            // $gst = $roomdetails['gst']*$_POST['no_of_room'];
+            
             $booking_no = $this->Custom->get_booking_no();
             $start_date = str_replace('/', '-', $_POST['booking_start_date']);
             $end_date = str_replace('/', '-', $_POST['booking_end_date']);
@@ -162,8 +161,19 @@ class Frontend extends MX_Controller
             $diff = strtotime($start_date) - strtotime($end_date);
      
             $days = ceil(abs($diff / 86400));
-            $total_cost = ($back_rate*$_POST['no_of_room']*$days) + $gst;
+            // $total_cost = ($back_rate*$_POST['no_of_room']*$days) + $gst;
             //exit;
+
+            
+            $gst = array_reduce($roomRates, function($sum, $item) {
+                $sum += floatval($item['gst']);
+                return $sum;
+            }, 0.0);
+            
+            $total_cost = array_reduce($roomRates, function($sum, $item) {
+                $sum += floatval($item['back_rate']);
+                return $sum;
+            }, 0.0);
 
             $bookingdata = array(
 
