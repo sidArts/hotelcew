@@ -152,9 +152,14 @@
 								<span class="woocommerce-Price-currencySymbol">₹</span>
 								<span id="per-night-price"></span>								
 							</span>
+							
 						</p>
 
-						<div class="woocommerce-product-details__short-description"><p>Per Night</p></div>
+						<div class="woocommerce-product-details__short-description">
+							<p>Per Night</p>
+						</div>
+
+						<span>+ ₹ <span id="gst-amount"></span> GST</span>
 
 						<div><p>Capacity: <?= $roomdetails['person'] ?> persons per room.</p></div>
 
@@ -362,6 +367,7 @@
 					var staySummary = ((totalNights > 1) ? `${totalNights} Nights` : `${totalNights} Night`) + `, ${totalDays} Days`;
 					$('#stay-summary').html(`<strong>${staySummary}</strong>`);
 					$('#per-night-price').text(parseFloat(perNightCost));
+					$('#gst-amount').text(parseFloat(data[0].gst));
 					showHideLoader('hide');
 				}, 'json');
 	    	}

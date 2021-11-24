@@ -338,7 +338,7 @@ $(document).ready(function() {
             //'colvis'
         ],
     	ajax:{
-    		url:"<?=ADMIN_URL.'/user/ride/list/'?>",
+    		url:"<?=ADMIN_URL.'user/ride/list/'?>",
     		type : 'GET',
 
     	},
