@@ -151,7 +151,7 @@ class Frontend extends MX_Controller
             $roomdetails = $this->Custom->room_details_by_id($request['room_id']);
             $roomRates = $this->Custom->room_rates_by_date($roomdetails['slug'], $request['booking_start_date'], $request['booking_end_date']);
             // $back_rate = $roomdetails['back_rate'];
-            // $gst = $roomdetails['gst']*$_POST['no_of_room'];
+            $gst = $roomdetails['gst']*$request['no_of_room'];
             
             $booking_no = $this->Custom->get_booking_no();
             // $start_date = str_replace('/', '-', $request['booking_start_date']);
@@ -166,12 +166,6 @@ class Frontend extends MX_Controller
             // $total_cost = ($back_rate*$_POST['no_of_room']*$days) + $gst;
             //exit;
 
-            
-            $gst = array_reduce($roomRates, function($sum, $item) {
-                $sum += floatval($item['gst']);
-                return $sum;
-            }, 0.0);
-            
             $total_cost = array_reduce($roomRates, function($sum, $item) {
                 $sum += floatval($item['back_rate']);
                 return $sum;

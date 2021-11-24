@@ -206,7 +206,7 @@ class User extends MX_Controller
         $sql = "SELECT wdi.id, wdi.day, rrbdow.id, rrbdow.rate as new_rate, rrbdow.gst as new_gst, h.* 
             FROM room_rates_by_day_of_week rrbdow
             JOIN hotel h ON h.id = rrbdow.room_id
-            JOIN week_day_indexes wdi ON CAST(wdi.id AS char) COLLATE utf8_unicode_ci = rrbdow.day_of_week;";
+            JOIN week_day_indexes wdi ON CAST(wdi.id AS char) COLLATE utf8_unicode_ci = rrbdow.day_of_week ORDER BY h.slug;";
         $query = $this->db->query($sql)->result();
         foreach ($query as $key => $row) {
             $data[] = array(
