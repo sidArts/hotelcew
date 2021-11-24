@@ -23,7 +23,9 @@
                     <li>
                         <a href="<?= ADMIN_URL."rooms/all" ?>">Rooms</a>
                     </li>
-                   
+                    <li>
+                        <a href="<?= ADMIN_URL."rooms/prices" ?>">Room Prices by Day of Week</a>
+                    </li>
                 </ul>
             </li>
             

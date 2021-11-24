@@ -466,6 +466,11 @@
                         regexp: /^[0-9]+$/,
                         message: 'No of rooms can only consist of number'
                     },
+                    between: {
+                        min: 1,
+                        max: 40,
+                        message: 'The value must be between '
+                    }
 	            }
 	        },		        
 	    }

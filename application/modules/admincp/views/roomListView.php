@@ -82,52 +82,37 @@ function deleteusers(id){
 }
 
 function deletemultiple(id){
-	
-
-          $.ajax({
-            url:"<?=ADMIN_URL.'user/delete_user/'?>",
-            type: 'post',
-            data:{id:id},
-            datatype: 'json'
-        })
-        .done(function (data) { 
-         
-            location.reload(true)
-         })
-        .fail(function (jqXHR, textStatus, errorThrown) { 
-         console.log('error');
-         });
-
-     
-	
+	$.ajax({
+	    url:"<?=ADMIN_URL.'user/delete_user/'?>",
+	    type: 'post',
+	    data:{id:id},
+	    datatype: 'json'
+	})
+	.done(function (data) {         
+	    location.reload(true);
+	 })
+	.fail(function (jqXHR, textStatus, errorThrown) { 
+		console.log('error');
+	});
 }
 
 $("#checkAll").click(function(){
     $('.check').not(this).prop('checked', this.checked);
-    
-   
-   
 });
 $(".deleteselected").click(function(){
- // var flag = confirm("Are you sure want to delete this store");
-
-    // if(flag == true){
-   $('.check:checked').each(function(index,item){
-		  let ids = $(item).val();
-		  deletemultiple(ids);
-		     
-  });
-//}
+	$('.check:checked').each(function(index,item){
+		let ids = $(item).val();
+		deletemultiple(ids);		     
+  	});
 });
 $(document).ready(function() {
-    $('#store_table').DataTable({
-     
+    $('#store_table').DataTable({     
     	ajax:{
     		url:"<?=ADMIN_URL.'user/roomListAPI/'?>",
     		type : 'GET',
 
     	},
-    	 "columns": [
+	 	"columns": [
             { "data": 0},
             { "data": 1},
             { "data": 2},

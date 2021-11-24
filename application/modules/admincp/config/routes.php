@@ -13,6 +13,7 @@ $route['admincp/stores/create']                   = "user/create_user/";
 $route['admincp/rooms/update/(:any)']                   = "user/updateRoom/";
 
 $route['admincp/rooms/all'] = "user/roomList";
+$route['admincp/rooms/prices'] = "user/roomPrices";
 $route['admincp/rooms/roomListAPI'] = "user/roomListAPI/";
 $route['admincp/users/remove'] = "user/delete_user/";
 $route['admincp/users/opcodecheck/']             = "user/checkopcode/";
