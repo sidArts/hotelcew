@@ -1682,3 +1682,7 @@ div.wpcf7-validation-errors, div.wpcf7-acceptance-missing{
     padding-top: 10px;
     padding-bottom: 10px;
 }
+
+.padding-bottom-10 {
+    padding-bottom: 10px;
+}

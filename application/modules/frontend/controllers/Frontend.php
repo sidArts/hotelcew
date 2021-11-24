@@ -146,17 +146,19 @@ class Frontend extends MX_Controller
     public function createBooking($value='') {
 
         if(isset($_POST)) {
-            $roomdetails = $this->Custom->room_details_by_id($_POST['room_id']);
-            $roomRates = $this->Custom->room_rates_by_date($roomdetails['slug'], $_POST['booking_start_date'], $_POST['booking_end_date']);
+            $stream_clean = $this->security->xss_clean($this->input->raw_input_stream);
+            $request = json_decode($stream_clean, true);
+            $roomdetails = $this->Custom->room_details_by_id($request['room_id']);
+            $roomRates = $this->Custom->room_rates_by_date($roomdetails['slug'], $request['booking_start_date'], $request['booking_end_date']);
             // $back_rate = $roomdetails['back_rate'];
             // $gst = $roomdetails['gst']*$_POST['no_of_room'];
             
             $booking_no = $this->Custom->get_booking_no();
-            $start_date = str_replace('/', '-', $_POST['booking_start_date']);
-            $end_date = str_replace('/', '-', $_POST['booking_end_date']);
+            // $start_date = str_replace('/', '-', $request['booking_start_date']);
+            // $end_date = str_replace('/', '-', $request['booking_end_date']);
 
-            $start_date = date('Y-m-d',strtotime($start_date));
-            $end_date = date('Y-m-d',strtotime($end_date));
+            $start_date = date('Y-m-d',strtotime($request['booking_start_date']));
+            $end_date = date('Y-m-d',strtotime($request['booking_end_date']));
 
             $diff = strtotime($start_date) - strtotime($end_date);
      
@@ -177,23 +179,23 @@ class Frontend extends MX_Controller
 
             $bookingdata = array(
 
-                'room_id'=>$_POST['room_id'],
+                'room_id'=>$request['room_id'],
 
-                'customer_name'=>$_POST['name'],
+                'customer_name'=>$request['name'],
 
-                'customer_mobile'=>$_POST['phone'],
+                'customer_mobile'=>$request['phone'],
 
-                'customer_email'=>$_POST['email'],
+                'customer_email'=>$request['email'],
 
                 'booking_no'=>$booking_no,
 
-                'booking_start_date'=>$_POST['booking_start_date'],
+                'booking_start_date'=>$request['booking_start_date'],
 
-                'booking_end_date'=>$_POST['booking_end_date'],
+                'booking_end_date'=>$request['booking_end_date'],
 
                 'booking_date'=>date('Y-m-d'),
 
-                'no_of_room'=>$_POST['no_of_room'],
+                'no_of_room'=>$request['no_of_room'],
 
                 'addition_cost'=>0,
 
