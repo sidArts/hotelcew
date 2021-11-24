@@ -151,12 +151,20 @@ class User extends MX_Controller
         $this->layout->view('roomListView', $this->data);
     }
 
-    public function roomPrices() {
-        $breadcrumb = [['page' => 'Room Prices']];
+    public function roomPricesByDayOfWeek() {
+        $breadcrumb = [['page' => 'Room Prices by Day of Week']];
         $this->layout->set_breadcumb($breadcrumb);
-        $this->layout->set_title('Room List');
+        $this->layout->set_title('Room Prices by Day of Week');
         $this->layout->set("admin-panel");
-        $this->layout->view('roomPrices', $this->data);
+        $this->layout->view('roomPricesByDayOfWeek', $this->data);
+    }
+
+    public function roomPricesByDate() {
+        $breadcrumb = [['page' => 'Room Prices by Date']];
+        $this->layout->set_breadcumb($breadcrumb);
+        $this->layout->set_title('Room Price by Date');
+        $this->layout->set("admin-panel");
+        $this->layout->view('roomPricesByDate', $this->data);
     }
 
     public function roomListAPI() {
@@ -203,7 +211,7 @@ class User extends MX_Controller
     }
 
     public function roomPricesAPI() {
-        $sql = "SELECT wdi.id, wdi.day, rrbdow.id, rrbdow.rate as new_rate, rrbdow.gst as new_gst, h.* 
+        $sql = "SELECT wdi.id, wdi.day, rrbdow.id, rrbdow.rate as new_rate, h.* 
             FROM room_rates_by_day_of_week rrbdow
             JOIN hotel h ON h.id = rrbdow.room_id
             JOIN week_day_indexes wdi ON CAST(wdi.id AS char) COLLATE utf8_unicode_ci = rrbdow.day_of_week ORDER BY h.slug;";
@@ -219,7 +227,42 @@ class User extends MX_Controller
                 $row->back_rate,
                 $row->gst,
                 $row->new_rate,
-                $row->new_gst,
+                $row->no_of_room,
+                // "<a href='" . ADMIN_URL . 'hotel-image/' . encrypt($row->id) . "' class='btn btn-info'>Images</a>",
+                "<a href='" . ADMIN_URL . 'rooms/update/' . encrypt($row->id) . "' class='btn btn-info'><i class='fa fa-edit'></i></a>"
+            );
+        }
+        $output = array(
+            "draw" => 0,
+            "recordsTotal" => count($query),
+            "recordsFiltered" => count($query),
+
+            "data" => $data
+        );
+
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(200)
+            ->set_output(json_encode($output));
+    }
+
+    public function roomPricesByDateAPI() {
+        $sql = "SELECT rrbd.id, rrbd.date, rrbd.id, rrbd.rate as new_rate, h.* 
+            FROM room_rates_by_date rrbd
+            JOIN hotel h ON h.id = rrbd.room_id 
+            ORDER BY h.slug;";
+        $query = $this->db->query($sql)->result();
+        foreach ($query as $key => $row) {
+            $data[] = array(
+                "<input type='checkbox' class='check' value='" . $row->id . "'/>",
+                $key + 1,
+                date("F j, Y", strtotime($row->date)),
+                $row->name,
+                $row->person,
+                $row->size,
+                $row->back_rate,
+                $row->gst,
+                $row->new_rate,
                 $row->no_of_room,
                 // "<a href='" . ADMIN_URL . 'hotel-image/' . encrypt($row->id) . "' class='btn btn-info'>Images</a>",
                 "<a href='" . ADMIN_URL . 'rooms/update/' . encrypt($row->id) . "' class='btn btn-info'><i class='fa fa-edit'></i></a>"

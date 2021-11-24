@@ -19,14 +19,13 @@
 						</th>
 
 						<th>S.L</th>
-						<th>Day of Week</th>
+						<th>Date</th>
 						<th>Name</th>
 						<th>Capacity</th>
 						<th>Size</th>
 						<th>Rate</th>
 						<th>GST</th>						
 						<th>New Rate</th>
-						<th>New GST</th>
 						<th>Total Rooms</th>
 						<th>Action</th>						
 					</tr>
@@ -75,7 +74,7 @@ function deleteMultiple(id) {
 $(document).ready(function() {
     $('#store_table').DataTable({     
     	ajax:{
-    		url:"<?=ADMIN_URL.'user/roomPricesAPI/'?>",
+    		url:"<?=ADMIN_URL.'user/roomPricesByDateAPI'?>",
     		type : 'GET'
     	},
 		"columns": [
@@ -90,7 +89,7 @@ $(document).ready(function() {
             {"data": 8},
             {"data": 9},
             {"data": 10},
-            {"data": 11},
+            // {"data": 11},
             // {"data": 12}
         ]
     });
