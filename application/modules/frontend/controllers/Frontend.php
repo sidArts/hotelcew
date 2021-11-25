@@ -187,7 +187,7 @@ class Frontend extends MX_Controller
 
                 'booking_end_date'=>$request['booking_end_date'],
 
-                'booking_date'=>date('Y-m-d'),
+                'booking_date'=> date('Y-m-d H:i:s'),
 
                 'no_of_room'=>$request['no_of_room'],
 
@@ -200,8 +200,8 @@ class Frontend extends MX_Controller
             );
 
             if($this->db->insert('st_bookings',$bookingdata)) {
-                $startDate = new DateTime($_POST['booking_start_date']);
-                $endDate = new DateTime($_POST['booking_end_date']);
+                $startDate = new DateTime($request['booking_start_date']);
+                $endDate = new DateTime($request['booking_end_date']);
 
                 while ($startDate < $endDate) {
                     $this->Custom->updateHotelRoomAvailability(
@@ -218,17 +218,17 @@ class Frontend extends MX_Controller
                 //get room info
                 // $room_details = $this->Custom->room_details_by_id($_POST['room_id']);
 
-                $to_admin = $_POST['email'];
+                $to_admin = $request['email'];
                 $subject_admin = 'Hotel Aviana | New Booking created';
                 $body_admin = '<h3>NEW BOOKING CREATED</h3>';
                 $body_admin .= '<p>Booking no: '.$booking_no.'</p>';
-                $body_admin .= '<p>Name: '.$_POST['name'].'</p>';
-                $body_admin .= '<p>Email: '.$_POST['email'].'</p>';
-                $body_admin .= '<p>Phone: '.$_POST['phone'].'</p>';
+                $body_admin .= '<p>Name: '.$request['name'].'</p>';
+                $body_admin .= '<p>Email: '.$request['email'].'</p>';
+                $body_admin .= '<p>Phone: '.$request['phone'].'</p>';
                 $body_admin .= '<p>Room: '.$roomdetails['name'].'</p>';
-                $body_admin .= '<p>Checkin: '.$_POST['booking_start_date'].'</p>';
-                $body_admin .= '<p>Checkout: '.$_POST['booking_end_date'].'</p>';
-                $body_admin .= '<p>No of room: '.$_POST['no_of_room'].'</p>';
+                $body_admin .= '<p>Checkin: '.$request['booking_start_date'].'</p>';
+                $body_admin .= '<p>Checkout: '.$request['booking_end_date'].'</p>';
+                $body_admin .= '<p>No of room: '.$request['no_of_room'].'</p>';
                 $body_admin .= '<p>Date: '.date('Y-m-d').'</p>';
                 $body_admin .= '<p>Total cost: '.$total_cost.'</p>';
                 $this->Custom->send_aviana_email($to_admin,$subject_admin,$body_admin);
