@@ -235,9 +235,16 @@ class Frontend extends MX_Controller
                 $this->Custom->send_aviana_email(DOMAIN_MAIL,$subject_admin,$body_admin);
                 //SEND ADMIN EMAIL
 
-                redirect('thank-you');
+                return $this->output
+                    ->set_content_type('application/json')
+                    ->set_status_header(200)
+                    ->set_output(json_encode(["status" => "success"]));
 
             }
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(500)
+                ->set_output(json_encode(["status" => "failed"]));
         }
     }
 

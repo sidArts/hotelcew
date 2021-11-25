@@ -70,11 +70,34 @@ function deleteMultiple(id) {
  	});
 }
 
+var upsertRoomPricesByDate = (data) => {
+	let url = "<?=ADMIN_URL.'user/upsert_room_prices_by_date'?>";
+	showLoader('show');
+	$.ajax({
+		url: url,
+		method: 'POST',
+		data: JSON.stringify(data),
+		contentType: 'application/json',
+		success: () => {
+			showLoader('hide');
+			bootbox.alert('Successfull!')
+		},
+		error: () => {
+			bootbox.alert('Failed! Please try again..');
+		}
+	})
+};
 
 $(document).ready(function() {
+
+	$('#submit-room-prices').click(() => {
+		var data = $('#upsert-room-prices-form').serialize();
+		upsertRoomPricesByDate(data);
+	});
+
     $('#store_table').DataTable({     
     	ajax:{
-    		url:"<?=ADMIN_URL.'user/roomPricesByDateAPI'?>",
+    		url:"<?=ADMIN_URL.'user/upsert_room_prices_by_date'?>",
     		type : 'GET'
     	},
 		"columns": [

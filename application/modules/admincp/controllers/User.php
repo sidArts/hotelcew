@@ -282,8 +282,49 @@ class User extends MX_Controller
             ->set_output(json_encode($output));
     }
 
-    public function upsert_room_prices_by_date($room_id, $price, $date) {
-        $this->db->insert()
+    public function upsert_room_prices_by_date() {
+        if(!isset($_POST)) {
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(500)
+                ->set_output(json_encode(["msg" => "INVALID REQUEST MEHTOD POST"]));
+        }
+        try {
+            $stream_clean = $this->security->xss_clean($this->input->raw_input_stream);
+            $request = json_decode($stream_clean, true);
+            $room_id = $request['room_id'], 
+            $price = $request['price'], 
+            $date = $request['date'];
+        } catch (\Exception $e) {
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(500)
+                ->set_output(json_encode(["msg" => $e->getMessage()]));
+        }
+        
+
+        $room_rate_by_date = $this->db->get_where('room_rates_by_date', [
+            "room_id" => $room_id,
+            "rate" => $price,
+            "date" => $date
+        ])->row_array();
+        if(isset($room_rate_by_date)) {
+            $this->db->set("room_id", $room_id);
+            $this->db->set("rate", $price);
+            $this->db->set("date", $date);
+            $this->db->where("id", $room_rates_by_date['id']);
+            $this->db->update('room_rates_by_date');
+        } else {
+            $this->db->insert('room_rates_by_date', [
+                "room_id" => $room_id,
+                "rate" => $price,
+                "date" => $date
+            ]);
+        }
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(200)
+            ->set_output(json_encode(["status" => "success"]));
     }
 
     public function upsert_room_prices_by_day_of_week($room_id, $price, $day_index) {

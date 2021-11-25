@@ -224,7 +224,6 @@ class Custom_model extends CI_Model
     $this->db->join('hotel AS h', 'h.id = hra.room_type');
     $this->db->where('room_type', $roomType);
     $this->db->where("date BETWEEN '$startDate' AND '$endDate'");
-    // $this->db->where("available_rooms > 0");
     $this->db->order_by('available_rooms', 'ASC');
     $this->db->limit(1);
     $query = $this->db->get();
