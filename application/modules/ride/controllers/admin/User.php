@@ -130,7 +130,7 @@ class User extends MX_Controller
                 // $row->customer_email,
                 date("F j, Y", strtotime($row->booking_start_date)),
                 date("F j, Y", strtotime($row->booking_end_date)),
-                date("F j, Y g:i:a", strtotime($row->booking_date)),
+                date("F j, Y h:i:s A", strtotime($row->booking_date)),
                 $row->no_of_room,
                 // $row->no_of_person,
                 number_format($row->total_cost + $row->gst, 2),

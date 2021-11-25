@@ -282,6 +282,15 @@ class User extends MX_Controller
             ->set_output(json_encode($output));
     }
 
+    public function upsert_room_prices_by_date($room_id, $price, $date) {
+        $this->db->insert()
+    }
+
+    public function upsert_room_prices_by_day_of_week($room_id, $price, $day_index) {
+        // 
+        $this->db->insert()
+    }
+
     public function gallerylist()
     {
 
