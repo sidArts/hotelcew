@@ -149,6 +149,7 @@
   </div>
 </div>
 <script>
+	var bookingsDatatable;
 	function deleteusers(id){
 
 var flag = confirm("Are you sure want to delete this store");
@@ -297,7 +298,7 @@ $(document).ready(function() {
 	      dt.ajax.reload();
 	    }
 	};
-    var bookingsDatatable = $('#rides').DataTable({
+    bookingsDatatable = $('#rides').DataTable({
     	"aaSorting": [],
      	dom: 'Bfrtip',
         buttons: [
