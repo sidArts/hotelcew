@@ -292,8 +292,8 @@ class User extends MX_Controller
         try {
             $stream_clean = $this->security->xss_clean($this->input->raw_input_stream);
             $request = json_decode($stream_clean, true);
-            $room_id = $request['room_id'], 
-            $price = $request['price'], 
+            $room_id = $request['room_id'];
+            $price = $request['price'];
             $date = $request['date'];
         } catch (\Exception $e) {
             return $this->output

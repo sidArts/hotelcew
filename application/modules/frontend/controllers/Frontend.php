@@ -172,31 +172,18 @@ class Frontend extends MX_Controller
             }, 0.0);
 
             $bookingdata = array(
-
                 'room_id'=>$request['room_id'],
-
                 'customer_name'=>$request['name'],
-
                 'customer_mobile'=>$request['phone'],
-
                 'customer_email'=>$request['email'],
-
                 'booking_no'=>$booking_no,
-
                 'booking_start_date'=>$request['booking_start_date'],
-
                 'booking_end_date'=>$request['booking_end_date'],
-
                 'booking_date'=> date('Y-m-d H:i:s'),
-
                 'no_of_room'=>$request['no_of_room'],
-
                 'addition_cost'=>0,
-
                 'gst'=>$gst,
-                
-                'total_cost'=>$total_cost,
-
+                'total_cost'=>$total_cost
             );
 
             if($this->db->insert('st_bookings',$bookingdata)) {
@@ -209,14 +196,6 @@ class Frontend extends MX_Controller
                     $startDate->modify('+1 day');
                 }
                 
-                // $to = $_POST['email'];
-                // $subject = 'Hotel Aviana | Booking success';
-                // $body = '<h3>YOUR BOOKING HAS BEEN SUCCESSFULLY DONE.</h3>';
-                // $body .= '<p>Our support team will contact you soon.</p>';
-                // $this->Custom->send_aviana_email($to,$subject,$body);
-
-                //get room info
-                // $room_details = $this->Custom->room_details_by_id($_POST['room_id']);
 
                 $to_admin = $request['email'];
                 $subject_admin = 'Hotel Aviana | New Booking created';

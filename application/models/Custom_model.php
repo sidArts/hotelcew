@@ -249,8 +249,8 @@ class Custom_model extends CI_Model
       $this->db->insert('hotel_room_availability_by_date', [
         'room_type'       => $roomDetails['id'],
         'date'            => $date->format('Y-m-d'),
-        'total_rooms'     => (int) $roomDetails['no_of_room'],
-        'available_rooms' => ((int)$roomDetails['no_of_room']) - $roomCount
+        'total_rooms'     => intval($roomDetails['no_of_room']),
+        'available_rooms' => intval($roomDetails['available_rooms']) - $roomCount
       ]);
     } else {
       $availableRooms = intval($res['available_rooms']) - $roomCount;
