@@ -18,11 +18,11 @@
 			<table class="custom-datatable table table-striped opt-table" id="store_table">
 				<thead>
 					<tr>
-						<th width="25px" data-orderable="false">
+						<!-- <th width="25px" data-orderable="false">
 							<input type="checkbox" id="checkAll"/><Label>All</label>
 
 						    <label for="selectAll"><button type="button" class="btn btn-danger deleteselected">Delete</button></label>
-						</th>
+						</th> -->
 
 						<th>S.L</th>
 						<th>Date</th>
@@ -217,7 +217,7 @@ $(document).ready(function() {
             {"data": 7},
             {"data": 8},
             {"data": 9},
-            {"data": 10},
+            // {"data": 10},
             // {"data": 11},
             // {"data": 12}
         ]

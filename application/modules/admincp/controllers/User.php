@@ -245,7 +245,7 @@ class User extends MX_Controller
         $query = $this->db->query($sql)->result();
         foreach ($query as $key => $row) {
             $data[] = array(
-                "<input type='checkbox' class='check' value='" . $row->id . "'/>",
+                // "<input type='checkbox' class='check' value='" . $row->id . "'/>",
                 $key + 1,
                 $row->day,
                 $row->name,
@@ -282,7 +282,7 @@ class User extends MX_Controller
         $query = $this->db->query($sql)->result();
         foreach ($query as $key => $row) {
             $data[] = array(
-                "<input type='checkbox' class='check' value='" . $row->pid . "'/>",
+                // "<input type='checkbox' class='check' value='" . $row->pid . "'/>",
                 $key + 1,
                 date("F j, Y", strtotime($row->date)),
                 $row->name,
