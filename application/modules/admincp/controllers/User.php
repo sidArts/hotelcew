@@ -168,22 +168,14 @@ class User extends MX_Controller
     }
 
     public function roomListAPI() {
-        $draw = intval($this->input->get("draw"));
-        // $start = intval($this->input->get("start"));
-        // $length = intval($this->input->get("length"));
-
-
         $this->db->select('*');
         $this->db->from('hotel');
-        // $this->db->join('st_user_roles', 'st_user_roles.id = st_stores.role');
-        // $this->db->where("st_stores.role", 2);
-        // $this->db->where("st_stores.status !=", "D");
         $query = $this->db->get()->result();
         foreach ($query as $key => $row) {
            // $available_rooms =  $this->Custom->get_available_room($row->id);
             //$image = "<img src=''>";
             $data[] = array(
-                "<input type='checkbox' class='check' value='" . $row->id . "'/>",
+                "<input type='checkbox' class='check' value='$row->id'/>",
                 $key + 1,
                 // "<img src='".base_url().'public/uploads/room/'.$row->image."'/ style='width:48px;height:36px'>",
                 $row->name,
@@ -198,19 +190,54 @@ class User extends MX_Controller
 
             );
         }
-        //print_r(count($query)); exit;
         $output = array(
-            "draw" => $draw,
+            "draw" => 0,
             "recordsTotal" => count($query),
             "recordsFiltered" => count($query),
             "data" => $data
         );
 
-        echo json_encode($output);
-        exit();
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(200)
+            ->set_output(json_encode($output));
     }
 
-    public function roomPricesAPI() {
+    public function roomListAPIJSON() {
+        try {
+            $this->db->select('*');
+            $this->db->from('hotel');
+            $data = $this->db->get()->result_array();        
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(200)
+                ->set_output(json_encode($data));
+        } catch (Exception $e) {
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(500)
+                ->set_output(json_encode(["error" => $e.getMessage()]));
+        }
+    }
+
+    public function getWeekDaysJSON() {
+        try {
+            $this->db->select('*');
+            $this->db->from('week_day_indexes');
+            $data = $this->db->get()->result_array();        
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(200)
+                ->set_output(json_encode($data));
+        } catch (Exception $e) {
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(500)
+                ->set_output(json_encode(["error" => $e.getMessage()]));
+        }
+    }
+
+    public function roomPricesByDayOfWeekAPI() {
         $sql = "SELECT wdi.id, wdi.day, rrbdow.id, rrbdow.rate as new_rate, h.* 
             FROM room_rates_by_day_of_week rrbdow
             JOIN hotel h ON h.id = rrbdow.room_id
@@ -222,11 +249,11 @@ class User extends MX_Controller
                 $key + 1,
                 $row->day,
                 $row->name,
-                $row->person,
-                $row->size,
                 $row->back_rate,
-                $row->gst,
                 $row->new_rate,
+                $row->person,
+                $row->size,                
+                $row->gst,                
                 $row->no_of_room,
                 // "<a href='" . ADMIN_URL . 'hotel-image/' . encrypt($row->id) . "' class='btn btn-info'>Images</a>",
                 "<a href='" . ADMIN_URL . 'rooms/update/' . encrypt($row->id) . "' class='btn btn-info'><i class='fa fa-edit'></i></a>"
@@ -293,7 +320,7 @@ class User extends MX_Controller
             $stream_clean = $this->security->xss_clean($this->input->raw_input_stream);
             $request = json_decode($stream_clean, true);
             $room_id = $request['room_id'];
-            $price = $request['price'];
+            $rate = $request['rate'];
             $date = $request['date'];
         } catch (\Exception $e) {
             return $this->output
@@ -305,19 +332,18 @@ class User extends MX_Controller
 
         $room_rate_by_date = $this->db->get_where('room_rates_by_date', [
             "room_id" => $room_id,
-            "rate" => $price,
             "date" => $date
         ])->row_array();
         if(isset($room_rate_by_date)) {
             $this->db->set("room_id", $room_id);
-            $this->db->set("rate", $price);
+            $this->db->set("rate", $rate);
             $this->db->set("date", $date);
             $this->db->where("id", $room_rates_by_date['id']);
             $this->db->update('room_rates_by_date');
         } else {
             $this->db->insert('room_rates_by_date', [
                 "room_id" => $room_id,
-                "rate" => $price,
+                "rate" => $rate,
                 "date" => $date
             ]);
         }
@@ -327,9 +353,48 @@ class User extends MX_Controller
             ->set_output(json_encode(["status" => "success"]));
     }
 
-    public function upsert_room_prices_by_day_of_week($room_id, $price, $day_index) {
-        // 
-        $this->db->insert()
+    public function upsert_room_prices_by_day_of_week() {
+        if(!isset($_POST)) {
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(500)
+                ->set_output(json_encode(["msg" => "INVALID REQUEST MEHTOD POST"]));
+        }
+        try {
+            $stream_clean = $this->security->xss_clean($this->input->raw_input_stream);
+            $request = json_decode($stream_clean, true);
+            $room_id = $request['room_id'];
+            $rate = $request['rate'];
+            $day_of_week = $request['day_of_week'];
+        } catch (\Exception $e) {
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(500)
+                ->set_output(json_encode(["msg" => $e->getMessage()]));
+        }
+        
+
+        $room_rate_by_day_of_week = $this->db->get_where('room_rates_by_day_of_week', [
+            "room_id" => $room_id,
+            "day_of_week" => $day_of_week
+        ])->row_array();
+        if(isset($room_rate_by_day_of_week)) {
+            $this->db->set("room_id", $room_id);
+            $this->db->set("rate", $rate);
+            $this->db->set("day_of_week", $day_of_week);
+            $this->db->where("id", $room_rate_by_day_of_week['id']);
+            $this->db->update('room_rates_by_day_of_week');
+        } else {
+            $this->db->insert('room_rates_by_day_of_week', [
+                "room_id" => $room_id,
+                "rate" => $rate,
+                "day_of_week" => $day_of_week
+            ]);
+        }
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(200)
+            ->set_output(json_encode(["status" => "success"]));
     }
 
     public function gallerylist()

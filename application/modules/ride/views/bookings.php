@@ -53,18 +53,6 @@
 						<th>Extra Cost</th>
 						<th>Status</th>
 						 -->
-						<!-- $row->booking_no,
-                $row->customer_name,
-                $row->customer_mobile,
-                $row->booking_no,
-                $row->customer_email,
-                $row->booking_start_date,
-                $row->booking_end_date,
-                $row->booking_date,
-                $row->no_of_room,
-                $row->no_of_person,
-                $row->total_cost,
-                $row->status, -->
 					</tr>
 				</thead>
 				<tbody>

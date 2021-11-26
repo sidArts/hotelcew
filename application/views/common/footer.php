@@ -18,7 +18,7 @@
 
         <!-- jQuery 2.0.2 -->
 
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+        <!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script> -->
 
         <script type="text/javascript" src="<?=ADMIN_JS?>jquery.min.js"></script>
 

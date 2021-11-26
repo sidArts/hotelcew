@@ -4,12 +4,17 @@
 	<div class="panel-heading">
 		Room Prices by Day of Week
 		<span class="page-buttons">
-			<a href="<?=ADMIN_URL.'stores/create'?>" class="header-button"><i class="fa fa-plus-circle"></i> Add New</a>
+
+			<select class="form-control" name="room_id" id="room-id-filter"></select>
+
+			<button data-toggle="modal" data-target="#open-create-new-room-price-modal" class="header-button" id="open-create-new-room-price">
+				<i class="fa fa-plus-circle"></i> Add New
+			</button>
 		</span> 
 	</div>
 	<div class="panel-body">
 		<div class="table-responsive">
-			<table class="custom-datatable table table-striped opt-table" id="store_table">
+			<table class="custom-datatable table table-striped opt-table" id="room-prices-by-day-of-week-table">
 				<thead>
 					<tr>
 						<th width="25px" data-orderable="false">
@@ -20,12 +25,12 @@
 
 						<th>S.L</th>
 						<th>Day of Week</th>
-						<th>Name</th>
-						<th>Capacity</th>
-						<th>Size</th>
-						<th>Rate</th>
-						<th>GST</th>						
+						<th>Room Type</th>
+						<th>Old Rate</th>											
 						<th>New Rate</th>
+						<th>Capacity</th>
+						<th>Size</th>						
+						<th>GST</th>
 						<th>Total Rooms</th>
 						<th>Action</th>						
 					</tr>
@@ -38,7 +43,39 @@
 	
 </div>
 
+<!-- CREATE NEW Room Price by date Modal -->
 
+<div id="open-create-new-room-price-modal" class="modal fade enquiryform">
+	<div class="modal-dialog">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Set Room Price</h4>
+				<button type="button" class="close" data-dismiss="modal">×</button>
+			</div>
+			<div class="modal-body contact_form1">
+				<form id="create-new-room-price-form" novalidate>
+					<input type="hidden" name="room_id" value="" id="room_id">
+					<div class="form-group">
+						<label>Select Room:<span>*</span></label>
+						<select class="form-control" name="room_id" id="room-id-select"></select>
+					</div>
+					<div class="form-group">
+						<label>Day of Week:<span>*</span></label>
+						<select class="form-control" name="day_of_week" id="day-of-week-select"></select>
+					</div>
+					<div class="form-group">
+						<label for="phone">Rate:<span>*</span></label>
+						<input type="text" class="form-control numbersOnly" id="rate" name="rate" autocomplete="off">
+					</div>
+					<button type="button" id="submit-room-prices" class="btn btn-warning">
+						Submit
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
 <script>
 function deleteWeeklyRate(id) {
   	$.ajax({
@@ -70,11 +107,89 @@ function deleteMultiple(id) {
  	});
 }
 
+var getAllRoomTypes = () => {
+	$.ajax({
+		url: "<?=ADMIN_URL.'user/roomListAPIJSON'?>",
+		dataType: "json",
+		method: 'GET',
+		success: (data) => {
+			$('#room-id-select').html('');
+			$('#room-id-filter').html('');
+			data.forEach(d => {
+				$('#room-id-select').append($('<option>', { 'value': d.id, 'text': d.name }));
+				$('#room-id-filter').append($('<option>', { 'value': d.id, 'text': d.name }));
+			});
+		},
+		error: err => {
+			console.log(err);
+		}
+	});
+};
+
+var getWeekDaysJSON = () => {
+	let url = "<?=ADMIN_URL.'user/getWeekDaysJSON'?>";
+	$.ajax({
+		url: url,
+		dataType: "json",
+		method: 'GET',
+		success: (data) => {
+			$('#day-of-week-select').html('');
+			data.forEach(d => {
+				$('#day-of-week-select').append($('<option>', { 'value': d.id, 'text': d.day }));
+			});
+		},
+		error: err => {
+			console.log(err);
+		}
+	});
+};
+
+
+var upsertRoomPricesByDayOfWeek = (data) => {
+	let url = "<?=ADMIN_URL.'user/upsert_room_prices_by_day_of_week'?>";
+	showHideLoader('show');
+	$.ajax({
+		url: url,
+		method: 'POST',
+		data: JSON.stringify(data),
+		contentType: 'application/json',
+		dataType: 'json',
+		success: () => {
+			showHideLoader('hide');
+			bootbox.alert('Successfull!')
+		},
+		error: () => {
+			showHideLoader('hide');
+			bootbox.alert('Failed! Please try again..');
+		}
+	})
+};
+
+
 
 $(document).ready(function() {
-    $('#store_table').DataTable({     
+	getAllRoomTypes();
+	getWeekDaysJSON();
+	$('#submit-room-prices').click(() => {
+		var data = $('#create-new-room-price-form').serializeArray()
+		.reduce((p, c) => { p[c.name] = c.value; return p; }, {});
+		data['rate'] = parseFloat(data['rate']);
+		console.log(data);
+		upsertRoomPricesByDayOfWeek(data);
+	});
+    var datatable = $('#room-prices-by-day-of-week-table').DataTable({
+    	"aaSorting": [],
+     	dom: 'Bfrtip',
+    	buttons: [
+    		{
+			    text: "<i class='fa fa-refresh'></i>",
+			    action: function (e, dt, node, config) {
+			        dt.ajax.reload(null, false);
+			    }
+			}
+        ],  
     	ajax:{
-    		url:"<?=ADMIN_URL.'user/roomPricesAPI'?>",
+    		url:"<?=ADMIN_URL.'user/roomPricesByDayOfWeekAPI'?>",
     		type : 'GET'
     	},
 		"columns": [

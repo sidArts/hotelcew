@@ -6,6 +6,7 @@
 
     </script>
 
+    <link href="<?=ADMIN_CSS?>jquery-ui-1.13.0.css" rel="stylesheet" type="text/css" />
     <!-- bootstrap 3.0.2 -->
 
     <link href="<?=ADMIN_CSS?>bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -56,15 +57,10 @@
 
     <!-- jQuery 2.0.2 -->
 
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script> -->
 
-    <script type="text/javascript" src="<?=ADMIN_JS?>jquery.min.js"></script>
-
-
-
-    <!-- jQuery UI 1.10.3 -->
-
-    <script type="text/javascript" src="<?=ADMIN_JS?>jquery-ui-1.10.3.min.js"></script>
+    <script type="text/javascript" src="<?=ADMIN_JS?>jquery-3.6.0.js"></script>
+    <script type="text/javascript" src="<?=ADMIN_JS?>jquery-ui-1.13.0.js"></script>
 
     <!-- Bootstrap -->
 

@@ -243,7 +243,7 @@
 
 						<label for="no_of_room">No of Rooms (<span id="room-count-by-date-range"></span> rooms available):<span>*</span></label>
 
-						<input type="text" name="no_of_room" id="no_of_room" class="form-control">
+						<input type="text" name="no_of_room" id="no_of_room" class="form-control" autocomplete="off">
 
 					</div>
 
