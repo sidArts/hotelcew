@@ -238,7 +238,7 @@ class User extends MX_Controller
     }
 
     public function roomPricesByDayOfWeekAPI() {
-        $sql = "SELECT wdi.id, wdi.day, rrbdow.id, rrbdow.rate as new_rate, h.* 
+        $sql = "SELECT wdi.id, wdi.day, rrbdow.id, rrbdow.rate as new_rate, rrbdow.room_id, h.* 
             FROM room_rates_by_day_of_week rrbdow
             JOIN hotel h ON h.id = rrbdow.room_id
             JOIN week_day_indexes wdi ON CAST(wdi.id AS char) COLLATE utf8_unicode_ci = rrbdow.day_of_week ORDER BY h.slug;";
@@ -256,7 +256,8 @@ class User extends MX_Controller
                 $row->gst,                
                 $row->no_of_room,
                 // "<a href='" . ADMIN_URL . 'hotel-image/' . encrypt($row->id) . "' class='btn btn-info'>Images</a>",
-                "<a href='" . ADMIN_URL . 'rooms/update/' . encrypt($row->id) . "' class='btn btn-info'><i class='fa fa-edit'></i></a>"
+                "<button data-id='$row->id' data-room-type='$row->room_id' data-week-day='$row->id' data-rate='$row->new_rate' class='btn btn-info btn-xs edit-price'><i class='fa fa-edit'></i></button>&nbsp;
+                <button data-id='$row->id' class='btn btn-danger btn-xs delete-price'><i class='fa fa-remove'></i></button>"
             );
         }
         $output = array(
@@ -274,14 +275,14 @@ class User extends MX_Controller
     }
 
     public function roomPricesByDateAPI() {
-        $sql = "SELECT rrbd.id, rrbd.date, rrbd.id, rrbd.rate as new_rate, h.* 
+        $sql = "SELECT rrbd.id as pid, rrbd.date, rrbd.id, rrbd.rate as new_rate, rrbd.room_id, h.* 
             FROM room_rates_by_date rrbd
             JOIN hotel h ON h.id = rrbd.room_id 
             ORDER BY h.slug;";
         $query = $this->db->query($sql)->result();
         foreach ($query as $key => $row) {
             $data[] = array(
-                "<input type='checkbox' class='check' value='" . $row->id . "'/>",
+                "<input type='checkbox' class='check' value='" . $row->pid . "'/>",
                 $key + 1,
                 date("F j, Y", strtotime($row->date)),
                 $row->name,
@@ -292,7 +293,8 @@ class User extends MX_Controller
                 $row->new_rate,
                 $row->no_of_room,
                 // "<a href='" . ADMIN_URL . 'hotel-image/' . encrypt($row->id) . "' class='btn btn-info'>Images</a>",
-                "<a href='" . ADMIN_URL . 'rooms/update/' . encrypt($row->id) . "' class='btn btn-info'><i class='fa fa-edit'></i></a>"
+                "<button data-id='$row->pid' data-room-type='$row->room_id' data-date='$row->date' data-rate='$row->new_rate' class='btn btn-info btn-xs edit-price'><i class='fa fa-edit'></i></button>&nbsp;
+                <button data-id='$row->pid' class='btn btn-danger btn-xs delete-price'><i class='fa fa-remove'></i></button>"
             );
         }
         $output = array(
@@ -338,7 +340,7 @@ class User extends MX_Controller
             $this->db->set("room_id", $room_id);
             $this->db->set("rate", $rate);
             $this->db->set("date", $date);
-            $this->db->where("id", $room_rates_by_date['id']);
+            $this->db->where("id", $room_rate_by_date['id']);
             $this->db->update('room_rates_by_date');
         } else {
             $this->db->insert('room_rates_by_date', [
@@ -395,6 +397,44 @@ class User extends MX_Controller
             ->set_content_type('application/json')
             ->set_status_header(200)
             ->set_output(json_encode(["status" => "success"]));
+    }
+
+    public function deleteRoomPricesByDayOfWeekAPI($id) {
+        
+        try {
+            $this->db->where('id', $id);
+            $this->db->delete('room_rates_by_day_of_week');
+
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(200)
+                ->set_output(json_encode(['status' => 'success']));    
+        } catch (Exception $e) {
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(200)
+                ->set_output(json_encode(['error' => $e->getMessage() ]));    
+        }
+        
+    }
+
+    public function deleteRoomPricesByDateAPI($id) {
+        
+        try {
+            $this->db->where('id', $id);
+            $this->db->delete('room_rates_by_date');
+
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(200)
+                ->set_output(json_encode(['status' => 'success']));    
+        } catch (Exception $e) {
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(200)
+                ->set_output(json_encode(['error' => $e->getMessage() ]));    
+        }
+        
     }
 
     public function gallerylist()

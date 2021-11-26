@@ -4,13 +4,15 @@
 	<div class="panel-heading">
 		Room Prices by Day of Week
 		<span class="page-buttons">
-
-			<select class="form-control" name="room_id" id="room-id-filter"></select>
-
 			<button data-toggle="modal" data-target="#open-create-new-room-price-modal" class="header-button" id="open-create-new-room-price">
 				<i class="fa fa-plus-circle"></i> Add New
 			</button>
 		</span> 
+		<span class="page-buttons-2">
+			<label>Room Filter</label>
+			<select name="room_id" id="room-id-filter"></select>
+		</span> 
+		
 	</div>
 	<div class="panel-body">
 		<div class="table-responsive">
@@ -76,20 +78,25 @@
 		</div>
 	</div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js"></script>
 <script>
-function deleteWeeklyRate(id) {
-  	$.ajax({
-        url:"<?=ADMIN_URL.'user/delete_user/'?>",
-        type: 'post',
-        data:{id:id},
-        datatype: 'json'
-    })
-    .done(function (data) {         
-        location.reload(true)
- 	})
-    .fail(function (jqXHR, textStatus, errorThrown) { 
- 		console.log('error');
- 	});	
+var datatable;
+function deleteOne(id) {
+	bootbox.confirm('Do you really want to delete this entry?', result => {
+		if(!result)
+			return;
+		$.ajax({
+	        url:"<?=ADMIN_URL.'user/deleteRoomPricesByDayOfWeekAPI/'?>" + id,
+	        type: 'get'
+	    })
+	    .done(function (data) {         
+	        datatable.ajax.reload();
+	 	})
+	    .fail(function (jqXHR, textStatus, errorThrown) { 
+	 		console.log('error');
+	 	});	
+	});
+  	
 }
 
 function deleteMultiple(id) {
@@ -113,11 +120,13 @@ var getAllRoomTypes = () => {
 		dataType: "json",
 		method: 'GET',
 		success: (data) => {
+
 			$('#room-id-select').html('');
 			$('#room-id-filter').html('');
+			$('#room-id-filter').append($('<option>', { 'value': '', 'text': 'All' }));
 			data.forEach(d => {
 				$('#room-id-select').append($('<option>', { 'value': d.id, 'text': d.name }));
-				$('#room-id-filter').append($('<option>', { 'value': d.id, 'text': d.name }));
+				$('#room-id-filter').append($('<option>', { 'value': d.name, 'text': d.name }));
 			});
 		},
 		error: err => {
@@ -155,10 +164,13 @@ var upsertRoomPricesByDayOfWeek = (data) => {
 		contentType: 'application/json',
 		dataType: 'json',
 		success: () => {
+			$('#open-create-new-room-price-modal').modal('hide');
 			showHideLoader('hide');
 			bootbox.alert('Successfull!')
+			datatable.ajax.reload();
 		},
 		error: () => {
+			$('#open-create-new-room-price-modal').modal('hide');
 			showHideLoader('hide');
 			bootbox.alert('Failed! Please try again..');
 		}
@@ -170,6 +182,24 @@ var upsertRoomPricesByDayOfWeek = (data) => {
 $(document).ready(function() {
 	getAllRoomTypes();
 	getWeekDaysJSON();
+
+	$('body').on('click', '.delete-price', function() {
+		deleteOne($(this).attr('data-id'))
+	});
+
+	$('body').on('click', '.edit-price', function() {
+		var room_id = $(this).attr('data-room-type');
+		var day_of_week = $(this).attr('data-week-day');
+		var rate = $(this).attr('data-rate');
+		$('#room-id-select').val(room_id);
+		$('#day-of-week-select').val(day_of_week);
+		$('#rate').val(rate);
+		$('#open-create-new-room-price-modal').modal('show');
+	});
+
+	$('#room-id-filter').change(function() {
+		datatable.search( $(this).val() ).draw();
+	});
 	$('#submit-room-prices').click(() => {
 		var data = $('#create-new-room-price-form').serializeArray()
 		.reduce((p, c) => { p[c.name] = c.value; return p; }, {});
@@ -177,7 +207,7 @@ $(document).ready(function() {
 		console.log(data);
 		upsertRoomPricesByDayOfWeek(data);
 	});
-    var datatable = $('#room-prices-by-day-of-week-table').DataTable({
+    datatable = $('#room-prices-by-day-of-week-table').DataTable({
     	"aaSorting": [],
      	dom: 'Bfrtip',
     	buttons: [

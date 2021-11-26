@@ -8,6 +8,10 @@
 				<i class="fa fa-plus-circle"></i> Add New
 			</button>
 		</span> 
+		<span class="page-buttons-2">
+			<label>Room Filter</label>
+			<select name="room_id" id="room-id-filter"></select>
+		</span> 
 	</div>
 	<div class="panel-body">
 		<div class="table-responsive">
@@ -63,7 +67,7 @@
 					</div>
 					<div class="form-group">
 						<label for="phone">Rate:<span>*</span></label>
-						<input type="text" class="form-control numbersOnly" id="phone" name="rate" autocomplete="off">
+						<input type="text" class="form-control numbersOnly" id="rate" name="rate" autocomplete="off">
 					</div>
 					<button type="button" id="submit-room-prices" class="btn btn-warning">
 						Submit
@@ -76,19 +80,22 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js"></script>
 <script>
-function deleteWeeklyRate(id) {
-  	$.ajax({
-        url:"<?=ADMIN_URL.'user/delete_user/'?>",
-        type: 'post',
-        data:{id:id},
-        datatype: 'json'
-    })
-    .done(function (data) {         
-        location.reload(true)
- 	})
-    .fail(function (jqXHR, textStatus, errorThrown) { 
- 		console.log('error');
- 	});	
+var datatable;
+function deleteOne(id) {
+ 	bootbox.confirm('Do you really want to delete this entry?', result => {
+		if(!result)
+			return;
+		$.ajax({
+	        url:"<?=ADMIN_URL.'user/deleteRoomPricesByDateAPI/'?>" + id,
+	        type: 'get'
+	    })
+	    .done(function (data) {         
+	        datatable.ajax.reload();
+	 	})
+	    .fail(function (jqXHR, textStatus, errorThrown) { 
+	 		console.log('error');
+	 	});	
+	});
 }
 
 function deleteMultiple(id) {
@@ -116,10 +123,13 @@ var upsertRoomPricesByDate = (data) => {
 		contentType: 'application/json',
 		dataType: 'json',
 		success: () => {
+			$('#open-create-new-room-price-modal').modal('hide');
 			showHideLoader('hide');
 			bootbox.alert('Successfull!')
+			datatable.ajax.reload();
 		},
 		error: () => {
+			$('#open-create-new-room-price-modal').modal('hide');
 			showHideLoader('hide');
 			bootbox.alert('Failed! Please try again..');
 		}
@@ -133,7 +143,10 @@ var getAllRoomTypes = () => {
 		method: 'GET',
 		success: (data) => {
 			$('#room-id-select').html('');
+			$('#room-id-filter').html('');
+			$('#room-id-filter').append($('<option>', { 'value': '', 'text': 'All' }));
 			data.forEach(d => {
+				$('#room-id-filter').append($('<option>', { 'value': d.name, 'text': d.name }));
 				$('#room-id-select').append($('<option>', { 'value': d.id, 'text': d.name }));
 			});
 		},
@@ -145,6 +158,22 @@ var getAllRoomTypes = () => {
 
 $(document).ready(function() {
 	getAllRoomTypes();
+	$('body').on('click', '.delete-price', function() {
+		deleteOne($(this).attr('data-id'));
+	});
+
+	$('body').on('click', '.edit-price', function() {
+		var room_id = $(this).attr('data-room-type');
+		var day_of_week = $(this).attr('data-date');
+		var rate = $(this).attr('data-rate');
+		$('#room-id-select').val(room_id);
+		$('#date').val(day_of_week);
+		$('#rate').val(rate);
+		$('#open-create-new-room-price-modal').modal('show');
+	});
+	$('#room-id-filter').change(function() {
+		datatable.search( $(this).val() ).draw();
+	});
 	$("input#date").datepicker({
 		dateFormat: 'yy-mm-dd',
 		minDate : 0,
@@ -162,7 +191,9 @@ $(document).ready(function() {
 
 	$('#open-create-new-room-price')
 
-    var datatable = $('#store_table').DataTable({
+    datatable = $('#store_table').DataTable({
+    	"aaSorting": [],
+     	dom: 'Bfrtip',
     	buttons: [
     		{
 			    text: "<i class='fa fa-refresh'></i>",

@@ -1091,3 +1091,19 @@ input:checked + .slider:before {
     background: #ccc;
     display: none;
 }
+
+.page-buttons-2 > label {
+    font-size: 14px;
+    padding: 3px 5px;
+    position: absolute;
+    right: 263px;
+    top: 9px;
+}
+
+.page-buttons-2 > select {
+    font-size: 14px;
+    padding: 3px 5px;
+    position: absolute;
+    right: 118px;
+    top: 9px;
+}
