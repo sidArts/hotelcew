@@ -42,7 +42,7 @@ class BookingAPI extends MX_Controller {
     	$stream_clean = $this->security->xss_clean($this->input->raw_input_stream);
 		$request = json_decode($stream_clean, true);
         
-		if(!isset($request) || !isset($request['status_id']) || !isset($request['booking_id']) || !isset($request['comments']))
+		if(!isset($request) || !isset($request['status_id']) || !isset($request['booking_id']))
 			return $this->output->set_status_header(500);
 
         $this->db->select('booking_start_date, booking_end_date, no_of_room, room_id');
@@ -78,7 +78,9 @@ class BookingAPI extends MX_Controller {
         }
 
         $this->db->trans_complete(); 
-		return $this->output->set_status_header(200);
+		return $this->output->set_content_type('application/json')
+                            ->set_status_header(200)
+                            ->set_output(json_encode(['status'=>'success']));
     }
 
     public function getBookingHistory() {

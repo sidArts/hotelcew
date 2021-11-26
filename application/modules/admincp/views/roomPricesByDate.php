@@ -189,8 +189,6 @@ $(document).ready(function() {
 		upsertRoomPricesByDate(data);
 	});
 
-	$('#open-create-new-room-price')
-
     datatable = $('#store_table').DataTable({
     	"aaSorting": [],
      	dom: 'Bfrtip',

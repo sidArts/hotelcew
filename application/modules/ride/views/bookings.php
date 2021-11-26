@@ -213,19 +213,11 @@ $(".deleteselected").click(function(){
 //}
 });
 
-function getFormData($form){
-    var unindexed_array = $form.serializeArray();
-    var indexed_array = {};
-
-    $.map(unindexed_array, function(n, i){
-        indexed_array[n['name']] = n['value'];
-    });
-
-    return indexed_array;
-}
 $(document).ready(function() {
 	$('#submit-update-booking-status-form').click(() => {
-		var updateBookingformData = getFormData($('#update-booking-status-form'));
+		var updateBookingformData = $('#update-booking-status-form').serializeArray()
+		.reduce((p, c) => { p[c.name] = c.value; return p; }, {});
+		// var updateBookingformData = getFormData($('#update-booking-status-form'));
 		var url = '/admincp/BookingAPI/setStatus';
 		showHideLoader('show');
 		$.ajax({
