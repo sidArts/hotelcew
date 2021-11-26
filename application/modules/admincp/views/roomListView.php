@@ -4,7 +4,7 @@
 	<div class="panel-heading">
 		Room Informations List
 		<span class="page-buttons">
-			<a href="<?=ADMIN_URL.'stores/create'?>" class="header-button"><i class="fa fa-plus-circle"></i> Add New</a>
+			<a href="<?=ADMIN_URL.'rooms/create'?>" class="header-button"><i class="fa fa-plus-circle"></i> Add New</a>
 		</span> 
 	</div>
 	<div class="panel-body">

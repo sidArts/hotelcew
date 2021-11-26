@@ -8,7 +8,7 @@ $route['admincp/general_settings_post']         = "admincp/general_settings_post
 $route['admincp/create/submit-user']            = "user/upsertRoomDetails/";
 
 $route['admincp/admin-logout']                     = "admincp/admin_logout";
-$route['admincp/stores/create']                   = "user/create_user/";
+$route['admincp/rooms/create']                   = "user/updateRoom/";
 
 $route['admincp/rooms/update/(:any)']                   = "user/updateRoom/";
 
