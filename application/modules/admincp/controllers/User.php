@@ -238,7 +238,7 @@ class User extends MX_Controller
     }
 
     public function roomPricesByDayOfWeekAPI() {
-        $sql = "SELECT wdi.id, wdi.day, rrbdow.id, rrbdow.rate as new_rate, rrbdow.room_id, h.* 
+        $sql = "SELECT wdi.id as week_day_index, wdi.day, rrbdow.id as pid, rrbdow.rate as new_rate, rrbdow.room_id, h.* 
             FROM room_rates_by_day_of_week rrbdow
             JOIN hotel h ON h.id = rrbdow.room_id
             JOIN week_day_indexes wdi ON CAST(wdi.id AS char) COLLATE utf8_unicode_ci = rrbdow.day_of_week ORDER BY h.slug;";
@@ -256,8 +256,8 @@ class User extends MX_Controller
                 $row->gst,                
                 $row->no_of_room,
                 // "<a href='" . ADMIN_URL . 'hotel-image/' . encrypt($row->id) . "' class='btn btn-info'>Images</a>",
-                "<button data-id='$row->id' data-room-type='$row->room_id' data-week-day='$row->id' data-rate='$row->new_rate' class='btn btn-info btn-xs edit-price'><i class='fa fa-edit'></i></button>&nbsp;
-                <button data-id='$row->id' class='btn btn-danger btn-xs delete-price'><i class='fa fa-remove'></i></button>"
+                "<button data-id='$row->pid' data-room-type='$row->room_id' data-week-day='$row->week_day_index' data-rate='$row->new_rate' class='btn btn-info btn-xs edit-price'><i class='fa fa-edit'></i></button>&nbsp;
+                <button data-id='$row->pid' class='btn btn-danger btn-xs delete-price'><i class='fa fa-remove'></i></button>"
             );
         }
         $output = array(

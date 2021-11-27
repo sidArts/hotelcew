@@ -4,7 +4,7 @@
 	<div class="panel-heading">
 		Room Prices by Date
 		<span class="page-buttons">
-			<button data-toggle="modal" data-target="#open-create-new-room-price-modal" class="header-button" id="open-create-new-room-price">
+			<button class="header-button" id="open-create-new-room-price-btn">
 				<i class="fa fa-plus-circle"></i> Add New
 			</button>
 		</span> 
@@ -85,15 +85,19 @@ function deleteOne(id) {
  	bootbox.confirm('Do you really want to delete this entry?', result => {
 		if(!result)
 			return;
+		showHideLoader('show');
 		$.ajax({
 	        url:"<?=ADMIN_URL.'user/deleteRoomPricesByDateAPI/'?>" + id,
 	        type: 'get'
 	    })
 	    .done(function (data) {         
 	        datatable.ajax.reload();
+	        showHideLoader('hide');
 	 	})
 	    .fail(function (jqXHR, textStatus, errorThrown) { 
 	 		console.log('error');
+	 		showHideLoader('hide');
+	 		bootbox.alert('Something went wrong, Please try again!');
 	 	});	
 	});
 }
@@ -124,9 +128,9 @@ var upsertRoomPricesByDate = (data) => {
 		dataType: 'json',
 		success: () => {
 			$('#open-create-new-room-price-modal').modal('hide');
+			datatable.ajax.reload();
 			showHideLoader('hide');
 			bootbox.alert('Successfull!')
-			datatable.ajax.reload();
 		},
 		error: () => {
 			$('#open-create-new-room-price-modal').modal('hide');
@@ -158,6 +162,14 @@ var getAllRoomTypes = () => {
 
 $(document).ready(function() {
 	getAllRoomTypes();
+	
+	$('#open-create-new-room-price-btn').click(() => {
+		$('#room-id-select').val($('#room-id-select > option:nth-child(1)').attr('value'));
+		$('#date').val('');
+		$('#rate').val('');
+		$('#open-create-new-room-price-modal').modal('show');
+	});
+
 	$('body').on('click', '.delete-price', function() {
 		deleteOne($(this).attr('data-id'));
 	});

@@ -4,7 +4,7 @@
 	<div class="panel-heading">
 		Room Prices by Day of Week
 		<span class="page-buttons">
-			<button data-toggle="modal" data-target="#open-create-new-room-price-modal" class="header-button" id="open-create-new-room-price">
+			<button class="header-button" id="open-create-new-room-price-btn">
 				<i class="fa fa-plus-circle"></i> Add New
 			</button>
 		</span> 
@@ -85,15 +85,19 @@ function deleteOne(id) {
 	bootbox.confirm('Do you really want to delete this entry?', result => {
 		if(!result)
 			return;
+		showHideLoader('show');
 		$.ajax({
 	        url:"<?=ADMIN_URL.'user/deleteRoomPricesByDayOfWeekAPI/'?>" + id,
-	        type: 'get'
+	        type: 'POST'
 	    })
 	    .done(function (data) {         
 	        datatable.ajax.reload();
+	        showHideLoader('hide');
 	 	})
 	    .fail(function (jqXHR, textStatus, errorThrown) { 
 	 		console.log('error');
+	 		showHideLoader('hide');
+	 		bootbox.alert('Something went wrong, Please try again!');
 	 	});	
 	});
   	
@@ -165,9 +169,9 @@ var upsertRoomPricesByDayOfWeek = (data) => {
 		dataType: 'json',
 		success: () => {
 			$('#open-create-new-room-price-modal').modal('hide');
-			showHideLoader('hide');
-			bootbox.alert('Successfull!')
 			datatable.ajax.reload();
+			showHideLoader('hide');
+			bootbox.alert('Successfull!');			
 		},
 		error: () => {
 			$('#open-create-new-room-price-modal').modal('hide');
@@ -182,6 +186,13 @@ var upsertRoomPricesByDayOfWeek = (data) => {
 $(document).ready(function() {
 	getAllRoomTypes();
 	getWeekDaysJSON();
+
+	$('#open-create-new-room-price-btn').click(() => {
+		$('#room-id-select').val($('#room-id-select > option:nth-child(1)').attr('value'));
+		$('#day-of-week-select').val($('#day-of-week-select > option:nth-child(1)').attr('value'));
+		$('#rate').val('');
+		$('#open-create-new-room-price-modal').modal('show');
+	});
 
 	$('body').on('click', '.delete-price', function() {
 		deleteOne($(this).attr('data-id'))
