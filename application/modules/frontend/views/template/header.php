@@ -32,7 +32,7 @@
 
     <link rel="profile" href="https://gmpg.org/xfn/11">
 
-    <link rel="shortcut icon" type="images/x-icon" href=""/>
+    <link rel="shortcut icon" type="image/png" href="/public/uploads/logo.png" >
 
     <title>Hotel Aviana</title>
 

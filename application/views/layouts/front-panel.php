@@ -7,7 +7,8 @@
 <head>
 
     <!-- load CSS and bootstrap and jquery -->
-
+    
+    
     <?php include("includes/front/head.php"); ?>
 
 

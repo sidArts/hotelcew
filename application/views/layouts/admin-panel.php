@@ -24,7 +24,7 @@
 
 	    <title>Hotel Aviana</title>
 
-		<link rel="shortcut icon" type="image/png" href="#Image-Path-here" >
+		<link rel="shortcut icon" type="image/png" href="/public/uploads/logo.png" >
 
 		
 

@@ -10,7 +10,7 @@
 
     <title><?=@$site_title?></title>
 
-    <link rel="shortcut icon" type="image/png" href="#">
+    <link rel="shortcut icon" type="image/png" href="/public/uploads/logo.png" >
 
 
 

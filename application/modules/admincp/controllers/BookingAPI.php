@@ -80,7 +80,7 @@ class BookingAPI extends MX_Controller {
 
                 while ($startDate < $endDate) {
                     $this->Custom->updateHotelRoomAvailability(
-                        $startDate, $roomDetails, (0 - $booking['no_of_room']));
+                        $startDate->format('Y-m-d'), $roomDetails, (0 - $booking['no_of_room']));
                     $startDate->modify('+1 day');
                 }
             }

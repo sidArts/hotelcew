@@ -150,22 +150,13 @@ class Frontend extends MX_Controller
             $request = json_decode($stream_clean, true);
             $roomdetails = $this->Custom->room_details_by_id($request['room_id']);
             $roomRates = $this->Custom->room_rates_by_date($roomdetails['slug'], $request['booking_start_date'], $request['booking_end_date']);
-            // $back_rate = $roomdetails['back_rate'];
             $gst = $roomdetails['gst']*$request['no_of_room'];
             
             $booking_no = $this->Custom->get_booking_no();
-            // $start_date = str_replace('/', '-', $request['booking_start_date']);
-            // $end_date = str_replace('/', '-', $request['booking_end_date']);
-
             $start_date = date('Y-m-d',strtotime($request['booking_start_date']));
             $end_date = date('Y-m-d',strtotime($request['booking_end_date']));
-
-            $diff = strtotime($start_date) - strtotime($end_date);
-     
+            $diff = strtotime($start_date) - strtotime($end_date);     
             $days = ceil(abs($diff / 86400));
-            // $total_cost = ($back_rate*$_POST['no_of_room']*$days) + $gst;
-            //exit;
-
             $total_cost = array_reduce($roomRates, function($sum, $item) {
                 $sum += floatval($item['back_rate']);
                 return $sum;
@@ -186,49 +177,52 @@ class Frontend extends MX_Controller
                 'total_cost'=>$total_cost
             );
 
-            if($this->db->insert('st_bookings',$bookingdata)) {
-                $startDate = new DateTime($request['booking_start_date']);
-                $endDate = new DateTime($request['booking_end_date']);
-
-                while ($startDate < $endDate) {
-                    $this->Custom->updateHotelRoomAvailability(
-                        $startDate, $roomdetails, $bookingdata['no_of_room']);
-                    $startDate->modify('+1 day');
+            $start_date = new DateTime($request['booking_start_date']);
+            $end_date = new DateTime($request['booking_end_date']);
+            
+            try {
+                $this->db->trans_start();
+                $this->db->insert('st_bookings', $bookingdata);
+                while ($start_date < $end_date) {
+                    $this->Custom->updateHotelRoomAvailability($start_date->format('Y-m-d'), $roomdetails, $bookingdata['no_of_room']);
+                    $start_date->modify('+1 day');
                 }
-                
+                $this->db->trans_complete();
 
-                $to_admin = $request['email'];
-                $subject_admin = 'Hotel Aviana | New Booking created';
-                $body_admin = '<h3>NEW BOOKING CREATED</h3>';
-                $body_admin .= '<p>Booking no: '.$booking_no.'</p>';
-                $body_admin .= '<p>Name: '.$request['name'].'</p>';
-                $body_admin .= '<p>Email: '.$request['email'].'</p>';
-                $body_admin .= '<p>Phone: '.$request['phone'].'</p>';
-                $body_admin .= '<p>Room: '.$roomdetails['name'].'</p>';
-                $body_admin .= '<p>Checkin: '.$request['booking_start_date'].'</p>';
-                $body_admin .= '<p>Checkout: '.$request['booking_end_date'].'</p>';
-                $body_admin .= '<p>No of room: '.$request['no_of_room'].'</p>';
-                $body_admin .= '<p>Date: '.date('Y-m-d').'</p>';
-                $body_admin .= '<p>Total cost: '.$total_cost.'</p>';
-                $this->Custom->send_aviana_email($to_admin,$subject_admin,$body_admin);
-                $this->Custom->send_aviana_email(DOMAIN_MAIL,$subject_admin,$body_admin);
-                //SEND ADMIN EMAIL
+                $to = $request['email'];
+                $subject = 'Hotel Aviana | New Booking created';
+                $body = '<h3>NEW BOOKING CREATED</h3>';
+                $body .= '<p>Booking no: '.$booking_no.'</p>';
+                $body .= '<p>Name: '.$request['name'].'</p>';
+                $body .= '<p>Email: '.$request['email'].'</p>';
+                $body .= '<p>Phone: '.$request['phone'].'</p>';
+                $body .= '<p>Room: '.$roomdetails['name'].'</p>';
+                $body .= '<p>Checkin: '.$request['booking_start_date'].'</p>';
+                $body .= '<p>Checkout: '.$request['booking_end_date'].'</p>';
+                $body .= '<p>No of room: '.$request['no_of_room'].'</p>';
+                $body .= '<p>Date: '. date('F j, Y',strtotime($bookingdata['booking_date'])) . '</p>';
+                $body .= '<p>Total cost: '. $total_cost . '</p>';
+
+                $this->send_booking_info_email($to, $subject, $body);
 
                 return $this->output
                     ->set_content_type('application/json')
                     ->set_status_header(200)
                     ->set_output(json_encode(["status" => "success"]));
-
-            }
-            return $this->output
+            } catch (Exception $e) {
+                return $this->output
                 ->set_content_type('application/json')
                 ->set_status_header(500)
-                ->set_output(json_encode(["status" => "failed"]));
+                ->set_output(json_encode(["error" => $e.getMessage()]));
+            }            
         }
     }
 
 
-
+    public function send_booking_info_email($to, $subject, $body) {        
+        $this->Custom->send_aviana_email($to, $subject, $body);
+        $this->Custom->send_aviana_email(DOMAIN_MAIL, $subject, $body);        
+    }
 
 
     public function list() {

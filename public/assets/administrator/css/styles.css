@@ -1107,3 +1107,7 @@ input:checked + .slider:before {
     right: 118px;
     top: 9px;
 }
+
+.ui-state-default {
+    border: none;
+}
