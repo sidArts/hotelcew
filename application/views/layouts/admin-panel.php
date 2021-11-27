@@ -78,7 +78,7 @@
 
 		                <li class="dropdown user user-menu">
 
-		                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+		                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
 
 		                        <i class="fa fa-user"></i>
 
@@ -92,7 +92,7 @@
 
 		                        <li class="divider"></li>
 
-		                        <li> <a href="<?= BASE_URL."admincp/settings/list" ?>"><i class="fa fa-cogs fa-fw"></i> Settings</a> </li>
+		                        <li> <a href="<?= BASE_URL."admincp/site-settings" ?>"><i class="fa fa-cogs fa-fw"></i> Settings</a> </li>
 
 		                    </ul>
 

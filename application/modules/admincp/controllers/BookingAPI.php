@@ -43,44 +43,58 @@ class BookingAPI extends MX_Controller {
 		$request = json_decode($stream_clean, true);
         
 		if(!isset($request) || !isset($request['status_id']) || !isset($request['booking_id']))
-			return $this->output->set_status_header(500);
+             return $this->output->set_content_type('application/json')
+                ->set_status_header(500)
+                ->set_output(json_encode(['msg'=>'JSON doesnt have status_id or booking_id properties.']));
 
-        $this->db->select('booking_start_date, booking_end_date, no_of_room, room_id');
-        $this->db->where('id', $request['booking_id']);
-        $query = $this->db->get('st_bookings');
-        $booking = $query->row_array();
+        try {
+            $this->db->select('booking_start_date, booking_end_date, no_of_room, room_id');
+            $this->db->where('id', $request['booking_id']);
+            $query = $this->db->get('st_bookings');
+            $booking = $query->row_array();
 
-        $roomDetails = $this->db->get_where('hotel', 
-            ['id' => $booking['room_id']])->row_array();     
+            if($booking['status'] == $request['status_id'])
+                return $this->output->set_content_type('application/json')
+                    ->set_status_header(500)
+                    ->set_output(json_encode(['msg'=>'Cannot update booking with the same status more than once.']));
 
-        $this->db->trans_start();
-		
-        $this->db->insert('booking_detail_history', $request);
+            $roomDetails = $this->db->get_where('hotel', 
+                ['id' => $booking['room_id']])->row_array();     
 
-        $this->db->reset_query();
-        
-        $this->db->set('status', $request['status_id']);
-        $this->db->where('id', $request['booking_id']);
-        $this->db->update('st_bookings');
-
-        $this->db->reset_query();
-
-        if (in_array($request['status_id'], SPECIAL_BOOKING_STATUS_LIST)) {
+            $this->db->trans_start();
             
-            $startDate = new DateTime($booking['booking_start_date']);
-            $endDate = new DateTime($booking['booking_end_date']);
+            $this->db->insert('booking_detail_history', $request);
 
-            while ($startDate < $endDate) {
-                $this->Custom->updateHotelRoomAvailability(
-                    $startDate, $roomDetails, (0 - $booking['no_of_room']));
-                $startDate->modify('+1 day');
+            $this->db->reset_query();
+            
+            $this->db->set('status', $request['status_id']);
+            $this->db->where('id', $request['booking_id']);
+            $this->db->update('st_bookings');
+
+            $this->db->reset_query();
+
+            if (in_array($request['status_id'], SPECIAL_BOOKING_STATUS_LIST)) {
+                
+                $startDate = new DateTime($booking['booking_start_date']);
+                $endDate = new DateTime($booking['booking_end_date']);
+
+                while ($startDate < $endDate) {
+                    $this->Custom->updateHotelRoomAvailability(
+                        $startDate, $roomDetails, (0 - $booking['no_of_room']));
+                    $startDate->modify('+1 day');
+                }
             }
-        }
 
-        $this->db->trans_complete(); 
-		return $this->output->set_content_type('application/json')
-                            ->set_status_header(200)
-                            ->set_output(json_encode(['status'=>'success']));
+            $this->db->trans_complete(); 
+            return $this->output->set_content_type('application/json')
+                                ->set_status_header(200)
+                                ->set_output(json_encode(['status'=>'success']));
+        } catch (Exception $e) {
+            return $this->output->set_content_type('application/json')
+                                ->set_status_header(500)
+                                ->set_output(json_encode(['msg'=>$e->getMessage()]));
+        }
+        
     }
 
     public function getBookingHistory() {
@@ -93,9 +107,6 @@ class BookingAPI extends MX_Controller {
             ->set_status_header(200)
             ->set_output(json_encode($data));
     }
-
-    
-
 }
 
 ?>
