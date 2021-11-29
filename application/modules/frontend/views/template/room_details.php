@@ -155,11 +155,11 @@
 							
 						</p>
 
-						<div class="woocommerce-product-details__short-description">
+						<!-- <div class="woocommerce-product-details__short-description">
 							<p>Per Night</p>
-						</div>
+						</div> -->
 
-						<span>+ ₹ <span id="gst-amount"></span> GST</span>
+						<span>+ ₹ <span id="gst-amount"></span> GST per Room</span>
 
 						<div><p>Capacity: <?= $roomdetails['person'] ?> persons per room.</p></div>
 
@@ -360,14 +360,14 @@
 						a += +c.back_rate;
 						return a;
 					 }, 0);
-					var perNightCost = (totalPrice / data.length).toFixed(2);
+					var perNightCost = totalPrice.toFixed(2);
 					console.log(perNightCost);
 					var totalNights = data.length;
 					var totalDays = data.length + 1;
 					var staySummary = ((totalNights > 1) ? `${totalNights} Nights` : `${totalNights} Night`) + `, ${totalDays} Days`;
 					$('#stay-summary').html(`<strong>${staySummary}</strong>`);
-					$('#per-night-price').text(parseFloat(perNightCost));
-					$('#gst-amount').text(parseFloat(data[0].gst));
+					$('#per-night-price').text(parseFloat(perNightCost).toLocaleString('en-IN'));
+					$('#gst-amount').text(parseFloat(data[0].gst).toLocaleString('en-IN'));
 					showHideLoader('hide');
 				}, 'json');
 	    	}
