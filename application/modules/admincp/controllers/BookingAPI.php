@@ -48,7 +48,7 @@ class BookingAPI extends MX_Controller {
                 ->set_output(json_encode(['msg'=>'JSON doesnt have status_id or booking_id properties.']));
 
         try {
-            $this->db->select('booking_start_date, booking_end_date, no_of_room, room_id');
+            $this->db->select('booking_start_date, booking_end_date, no_of_room, room_id, status');
             $this->db->where('id', $request['booking_id']);
             $query = $this->db->get('st_bookings');
             $booking = $query->row_array();
