@@ -160,7 +160,7 @@ class Frontend extends MX_Controller
             $total_cost = array_reduce($roomRates, function($sum, $item) {
                 $sum += floatval($item['back_rate']);
                 return $sum;
-            }, 0.0);
+            }, 0.0) * intval($request['no_of_room']);
 
             $bookingdata = array(
                 'room_id'=>$request['room_id'],
