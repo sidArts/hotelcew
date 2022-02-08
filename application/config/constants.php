@@ -492,23 +492,23 @@ define('PUBLIC_PATH', $root."public/");
 
 
 
-define('ADMIN_CSS', PUBLIC_PATH.'backend/assets/administrator/css/');
+define('ADMIN_CSS', PUBLIC_PATH.'backend/assets/css/');
 
 
 
-define('ADMIN_JS', PUBLIC_PATH.'backend/assets/administrator/js/');
+define('ADMIN_JS', PUBLIC_PATH.'backend/assets/js/');
 
 
 
-define('ADMIN_PLUGINS', PUBLIC_PATH.'backend/assets/administrator/plugins/');
+define('ADMIN_PLUGINS', PUBLIC_PATH.'backend/assets/plugins/');
 
 
 
-define('FRONT_CSS', PUBLIC_PATH.'backend/assets/front/css/');
+define('FRONT_CSS', PUBLIC_PATH.'assets/front/css/');
 
 
 
-define('FRONT_ASSETS', PUBLIC_PATH.'backend/assets/front/');
+define('FRONT_ASSETS', PUBLIC_PATH.'assets/front/');
 
 
 
