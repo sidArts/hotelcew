@@ -1,7 +1,5 @@
 <?php
 
-define ('WPCF7_LOAD_JS', false );
-define('WPCF7_LOAD_CSS', false);
 
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -130,7 +128,7 @@ define('PUBLIC_PATH', $root."public/");*/
 
 
 
-$config['base_url'] = 'https://hotelaviani.com';
+$config['base_url'] = $root;
 
 
 
@@ -178,7 +176,7 @@ $config['base_url'] = 'https://hotelaviani.com';
 
 
 
-$config['index_page'] = '';
+$config['index_page'] = 'index.php';
 
 
 
@@ -246,7 +244,7 @@ $config['index_page'] = '';
 
 
 
-$config['uri_protocol']	= 'AUTO';
+$config['uri_protocol']	= 'REQUEST_URI';
 
 
 
